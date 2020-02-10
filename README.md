@@ -1,3 +1,3 @@
 # EFAAPI
 
-A description of this package.
+This package can be used to use EFA (Elektronische Fahrplanauskunft) data.

@@ -1,15 +1,20 @@
 import XCTest
 @testable import EFAAPI
 
-final class EFAAPITests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(EFAAPI().text, "Hello, World!")
+final class EFAManagerTests: XCTestCase {
+    
+    public var manager: EFAManager!
+    
+    override func setUp() {
+        self.manager = EFAManager(efaEndpoint: "https://openservice.vrr.de/vrr/XML_DM_REQUEST")
+        super.setUp()
+    }
+    
+    func testSetup() {
+        XCTAssertEqual(manager.endpoint, "https://openservice.vrr.de/vrr/XML_DM_REQUEST")
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testSetup", testSetup),
     ]
 }
