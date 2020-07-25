@@ -26,6 +26,26 @@ final class EFAManagerTests: XCTestCase {
             
             print(request)
             
+            print(request.language)
+            
+            XCTAssertEqual(request.language.count, 2)
+            
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 10)
+        
+    }
+    
+    func test_execute_stop_finder_request() {
+        
+        let expectation = XCTestExpectation()
+        
+        manager.executeStopFinderRequest { request in
+            
+            print(request.language)
+            print(request.stopFinderRequest)
+            
             XCTAssertEqual(request.language.count, 2)
             
             expectation.fulfill()

@@ -71,6 +71,34 @@ public class EFAManager {
         
     }
     
+    public func executeStopFinderRequest(completion: @escaping (StopFinderResponse) ->()) {
+        
+        guard let request = try? buildCommonURLRequest(for: .stopFinder) else { return }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
+            guard let data = data else { return }
+            
+            print(String.init(data: data, encoding: .utf8))
+            
+            let decoder = XMLDecoder()
+            let format = DateFormatter()
+            
+            format.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            
+            if #available(iOS 10.0, *) {
+                decoder.dateDecodingStrategy = .formatted(format)
+            }
+            
+            guard let request = try? decoder.decode(StopFinderResponse.self, from: data) else { return }
+            
+            completion(request)
+            
+        }.resume()
+        
+    }
+    
+    
     public struct StandardRequestParameters: Codable {
         var isStateless: Bool = true
         var isLocationServerActive: Bool = true
