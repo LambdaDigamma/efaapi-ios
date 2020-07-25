@@ -14,8 +14,8 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
     public var listIndex: Int?
     public var name: String
     public var matchQuality: Int
-    public var x: Int
-    public var y: Int
+    public var lat: Double
+    public var lng: Double
     public var mapName: String
     public var omc: Int
     public var placeID: Int
@@ -37,8 +37,8 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
         case name = ""
         case locality
         case matchQuality
-        case x
-        case y
+        case lng = "x"
+        case lat = "y"
         case mapName
         case id
         case omc

@@ -52,8 +52,6 @@ public class EFAManager {
             
             guard let data = data else { return }
             
-            print(String.init(data: data, encoding: .utf8))
-            
             let decoder = XMLDecoder()
             let format = DateFormatter()
             
@@ -73,13 +71,11 @@ public class EFAManager {
     
     public func executeStopFinderRequest(completion: @escaping (StopFinderResponse) ->()) {
         
-        guard let request = try? buildCommonURLRequest(for: .stopFinder, addition: "?name_sf=K%C3%B6nig&locationServerActive=1&type_sf=any") else { return }
+        guard let request = try? buildCommonURLRequest(for: .stopFinder, addition: "?name_sf=K%C3%B6nig&locationServerActive=1&type_sf=any&coordOutputFormat=WGS84%5BDD.DDDDD%5D%20&UTFMacro=1") else { return }
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             
             guard let data = data else { return }
-            
-            print(String.init(data: data, encoding: .utf8))
             
             let decoder = XMLDecoder()
             let format = DateFormatter()
