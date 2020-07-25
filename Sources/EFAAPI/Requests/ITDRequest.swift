@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct ITDRequest: Codable, Equatable, DynamicNodeDecoding {
+public class ITDRequest: Codable, Equatable, DynamicNodeDecoding {
     
     public let language: String
     public let sessionID: Int
@@ -31,6 +31,12 @@ public struct ITDRequest: Codable, Equatable, DynamicNodeDecoding {
         default:
             return .element
         }
+    }
+    
+    public static func == (lhs: ITDRequest, rhs: ITDRequest) -> Bool {
+        return lhs.language == rhs.language
+            && lhs.sessionID == rhs.sessionID
+            && lhs.now == rhs.now
     }
     
 }
