@@ -9,12 +9,13 @@ import Foundation
 
 public struct ObjectFilter: OptionSet {
 
+    public typealias RawValue = Int
+    public let rawValue: RawValue
+    
     public init(rawValue: Self.RawValue) {
         self.rawValue = rawValue
     }
     
-    public let rawValue: Int
-
     /**
      No filter active. Search the entire search space.
      */
@@ -55,4 +56,28 @@ public struct ObjectFilter: OptionSet {
      */
     public static let postcode         = ObjectFilter(rawValue: 1 << 6)
 
+}
+
+extension ObjectFilter: Decodable {
+    
+    public init(from decoder: Decoder) throws {
+        
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(Int.self)
+        
+        self = ObjectFilter(rawValue: rawValue)
+        
+    }
+    
+}
+
+extension ObjectFilter: Encodable {
+    
+    public func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.singleValueContainer()
+        try container.encode(self.rawValue)
+        
+    }
+    
 }
