@@ -30,9 +30,9 @@ public class EFAManager {
         
     }
     
-    public func buildCommonURLRequest(for endpoint: QueryEndpoints) throws -> URLRequest {
+    public func buildCommonURLRequest(for endpoint: QueryEndpoints, addition: String = "") throws -> URLRequest {
         
-        guard let url = URL(string: self.endpoint + endpoint.rawValue)
+        guard let url = URL(string: self.endpoint + endpoint.rawValue + addition)
             else { throw EndpointError.invalidURL }
         
         let request = URLRequest(url: url)
@@ -73,7 +73,7 @@ public class EFAManager {
     
     public func executeStopFinderRequest(completion: @escaping (StopFinderResponse) ->()) {
         
-        guard let request = try? buildCommonURLRequest(for: .stopFinder) else { return }
+        guard let request = try? buildCommonURLRequest(for: .stopFinder, addition: "?name_sf=K%C3%B6nig&locationServerActive=1&type_sf=any") else { return }
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             
@@ -90,9 +90,12 @@ public class EFAManager {
                 decoder.dateDecodingStrategy = .formatted(format)
             }
             
-            guard let request = try? decoder.decode(StopFinderResponse.self, from: data) else { return }
-            
-            completion(request)
+            do {
+                let request = try decoder.decode(StopFinderResponse.self, from: data)
+                completion(request)
+            } catch {
+                print(error.localizedDescription)
+            }
             
         }.resume()
         

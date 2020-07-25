@@ -10,6 +10,8 @@ import XMLCoder
 
 /**
  ODV is an abbreviation for "origin destination via" and is used to verify points using the EFAs location server.
+ It refers to the role that the point has within a request.
+ The determination of points (stops, addresses, points of interest, ...) using the EFA Location Server is outlined. ODVs allow a single field search.
  */
 public struct ODV: Codable, DynamicNodeDecoding {
     
@@ -17,12 +19,14 @@ public struct ODV: Codable, DynamicNodeDecoding {
     public var usage: ODVUsageType
     public var objectFilter: ObjectFilter
     public var place: ODVPlace
+    public var name: ODVName?
     
     public enum CodingKeys: String, CodingKey {
         case type
         case usage
         case objectFilter = "anyObjFilter"
         case place = "itdOdvPlace"
+        case name = "itdOdvName"
     }
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
