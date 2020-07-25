@@ -52,6 +52,8 @@ public class EFAManager {
             
             guard let data = data else { return }
             
+            print(String.init(data: data, encoding: .utf8))
+            
             let decoder = XMLDecoder()
             let format = DateFormatter()
             

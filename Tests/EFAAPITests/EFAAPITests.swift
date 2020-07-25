@@ -18,23 +18,6 @@ final class EFAManagerTests: XCTestCase {
         XCTAssertEqual(EFAManager.QueryEndpoints.allCases.count, 4)
     }
     
-    func test_object_filter() {
-        
-        let stationsAndPOIsFilter: ObjectFilter = [.stations, .pointsOfInterest]
-        XCTAssertEqual(stationsAndPOIsFilter.rawValue, 34)
-        
-        let placesAndStreetsFilter: ObjectFilter = [.places, .streets]
-        XCTAssertEqual(placesAndStreetsFilter.rawValue, 5)
-        
-        let intersectionsAndAddressesAndPostcodesFilter: ObjectFilter =
-            [.intersections, .addresses, .postcode]
-        XCTAssertEqual(intersectionsAndAddressesAndPostcodesFilter.rawValue, 88)
-        
-        let fullSearchFilter: ObjectFilter = [.noFilter]
-        XCTAssertEqual(fullSearchFilter.rawValue, 0)
-        
-    }
-    
     func test_execute_request() {
         
         let expectation = XCTestExpectation()
@@ -55,6 +38,6 @@ final class EFAManagerTests: XCTestCase {
     static var allTests = [
         ("test_setup", test_setup),
         ("test_has_4_query_endpoints", test_has_4_query_endpoints),
-        ("test_object_filter", test_object_filter)
+        ("test_execute_request", test_has_4_query_endpoints),
     ]
 }
