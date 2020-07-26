@@ -20,7 +20,7 @@ public struct ODV: Codable, DynamicNodeDecoding {
     public var objectFilter: ObjectFilter
     public var place: ODVPlace
     public var name: ODVName?
-    
+
     public enum CodingKeys: String, CodingKey {
         case type
         case usage
@@ -28,7 +28,7 @@ public struct ODV: Codable, DynamicNodeDecoding {
         case place = "itdOdvPlace"
         case name = "itdOdvName"
     }
-    
+
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
             case CodingKeys.type:

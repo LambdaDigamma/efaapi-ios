@@ -12,6 +12,7 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
     
     public var id: Int
     public var listIndex: Int?
+    public var mapItemList: ITDMapItemList?
     public var name: String
     public var matchQuality: Int
     public var lat: Double
@@ -30,10 +31,11 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
     public var nameKey: String
     public var mainLocality: String
     public var stateless: String
-    public var value: String
+    public var value: String?
     
     public enum CodingKeys: String, CodingKey {
         case listIndex
+        case mapItemList = "itdMapItemList"
         case name = ""
         case locality
         case matchQuality
@@ -58,8 +60,10 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
-            case CodingKeys.name:
+            case CodingKeys.mapItemList:
                 return .element
+            case CodingKeys.name:
+                return .elementOrAttribute
             default:
                 return .attribute
         }

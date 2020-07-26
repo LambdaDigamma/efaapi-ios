@@ -12,6 +12,7 @@ public struct StopFinderRequest: Codable, DynamicNodeDecoding {
     
     public let requestID: Int
     public let odv: ODV
+    public var date: ITDDateTime
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
@@ -25,6 +26,7 @@ public struct StopFinderRequest: Codable, DynamicNodeDecoding {
     enum CodingKeys: String, CodingKey {
         case requestID
         case odv = "itdOdv"
+        case date = "itdDateTime"
     }
     
 }
