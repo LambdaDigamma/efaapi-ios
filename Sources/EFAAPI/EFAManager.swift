@@ -1,9 +1,15 @@
 import Foundation
 import XMLCoder
+import Combine
 
-enum Station {
-    typealias ID = Int
+public enum Station {
+    public typealias ID = Int
 }
+
+// TODO: Delay
+// enum Delay: Codable {
+//
+// }
 
 public class EFAManager {
     
@@ -128,7 +134,19 @@ public class EFAManager {
 
 extension EFAManager {
     
-    public func sendStopFinderRequest(searchText: String, completion: @escaping (StopFinderResponse) -> ()) {
+    /// Send a stop finder request with a specified search text
+    /// and receive a stop finder response.
+    ///
+    ///
+    /// - Parameters:
+    ///   - searchText: Search term
+    ///   - objectFilter: Specifies the stop types returned by the api (`ObjectFilter`)
+    ///   - completion: Closure called on response
+    public func sendStopFinderRequest(searchText: String,
+                                      objectFilter: ObjectFilter = .noFilter,
+                                      completion: @escaping (StopFinderResponse) -> ()) {
+        
+        // TOOD: Implement Object Filter
         
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
@@ -137,10 +155,13 @@ extension EFAManager {
         urlComponents.queryItems = [
             URLQueryItem(name: "name_sf", value: searchText),
             URLQueryItem(name: "locationServerActive", value: "1"),
+            URLQueryItem(name: "anyObjFilter_sf", value: "\(objectFilter.rawValue)"),
             URLQueryItem(name: "type_sf", value: "any"),
             URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
             URLQueryItem(name: "UTFMacro", value: "1")
         ]
+        
+        
         
         guard let url = urlComponents.url?.absoluteURL else { return }
         
@@ -161,6 +182,8 @@ extension EFAManager {
                 decoder.dateDecodingStrategy = .formatted(format)
             }
             
+            // TODO: Add an error callback
+            
             do {
                 let request = try decoder.decode(StopFinderResponse.self, from: data)
                 completion(request)
@@ -176,12 +199,64 @@ extension EFAManager {
     
 }
 
-// MARK: -
+// MARK: - Departure Monitor
 
 extension EFAManager {
     
-//    public func sendDepartureMonitorRequest(id: Station.ID, completion: @escaping ()
-    
+    public func sendDepartureMonitorRequest(id: Station.ID) -> AnyPublisher<DepartureMonitorResponse, Error> {
+        
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = self.host
+        urlComponents.path = "/vrr/" + QueryEndpoints.depatureMonitor.rawValue // TODO: Replace path component
+        urlComponents.queryItems = [
+            URLQueryItem(name: "name_dm", value: "\(id)"),
+            URLQueryItem(name: "useRealtime", value: "1"),
+            URLQueryItem(name: "locationServerActive", value: "1"),
+            URLQueryItem(name: "type_dm", value: "stop"),
+            URLQueryItem(name: "itdDateTimeDepArr", value: "dep"),
+            URLQueryItem(name: "mode", value: "direct"),
+            URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
+            URLQueryItem(name: "UTFMacro", value: "1")
+        ]
+        
+        guard let url = urlComponents.url?.absoluteURL else {
+            return Fail(error: EndpointError.invalidURL).eraseToAnyPublisher()
+        }
+        
+        print(url)
+        
+        let request = URLRequest(url: url)
+        
+        
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap { (data, response) -> DepartureMonitorResponse in
+                
+                let decoder = XMLDecoder()
+                let format = DateFormatter()
+                
+                decoder.dateDecodingStrategy = .formatted(format)
+                
+                format.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                
+                print(String(data: data, encoding: .utf8)!)
+                
+                do {
+                    let response = try decoder.decode(DepartureMonitorResponse.self, from: data)
+                    return response
+                } catch let error as DecodingError {
+                    print(error)
+                    throw error
+                } catch {
+                    throw error
+                }
+                
+            }
+            .eraseToAnyPublisher()
+        
+    }
+        
 }
 
 

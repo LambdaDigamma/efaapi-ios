@@ -10,7 +10,7 @@ import XMLCoder
 
 public struct ODVNameElement: Codable, DynamicNodeDecoding {
     
-    public var id: Int
+    public var id: Int?
     public var listIndex: Int?
     public var mapItemList: ITDMapItemList?
     public var name: String
@@ -23,21 +23,30 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
     /**
      District code number of the element. Also known as 'Gemeindekennziffer' (GKZ or OMC).
      */
-    public var omc: Int
+    public var omc: Int?
     
-    public var placeID: Int
-    public var type: ObjectFilter
-    public var anyType: String
-    public var locality: String
-    public var objectName: String
-    public var buildingName: String
-    public var buildingNumber: String
-    public var postcode: String
-    public var streetName: String
-    public var nameKey: String
-    public var mainLocality: String
+    public var placeID: Int?
+    public var type: ObjectFilter?
+    public var anyType: String?
+    public var locality: String?
+    public var objectName: String?
+    public var buildingName: String?
+    public var buildingNumber: String?
+    public var postcode: String?
+    public var streetName: String?
+    public var nameKey: String?
+    public var mainLocality: String?
     public var stateless: String
     public var value: String?
+    
+    
+    // Can be found in DM requests
+    public var stopID: Stop.ID?
+    public var isTransferStop: Bool?
+    public var tariffArea: String?
+    public var tariffAreaName: String?
+    public var tariffLayer1: String?
+    public var tariffLayer2: String?
     
     public enum CodingKeys: String, CodingKey {
         case listIndex
@@ -62,6 +71,13 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
         case mainLocality
         case stateless
         case value
+        
+        case stopID = "stopID"
+        case isTransferStop
+        case tariffArea
+        case tariffAreaName
+        case tariffLayer1
+        case tariffLayer2
     }
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {

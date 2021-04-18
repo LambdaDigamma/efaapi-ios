@@ -10,8 +10,8 @@ import XMLCoder
 
 public struct ITDDateTime: Codable, DynamicNodeDecoding {
     
-    public var ttpFrom: String
-    public var ttpTo: String
+    public var ttpFrom: String?
+    public var ttpTo: String?
     
     public var date: ITDDate?
     public var time: ITDTime?
@@ -26,9 +26,7 @@ public struct ITDDateTime: Codable, DynamicNodeDecoding {
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
-            case CodingKeys.ttpFrom:
-                return .attribute
-            case CodingKeys.ttpTo:
+            case CodingKeys.ttpFrom, CodingKeys.ttpTo:
                 return .attribute
             default:
                 return .element

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TransportType: Int, Codable, CaseIterable {
+public enum TransportType: Int, Codable, CaseIterable {
     
     /**
      This is the german 'Zug'.
