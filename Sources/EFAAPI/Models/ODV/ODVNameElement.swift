@@ -15,10 +15,16 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
     public var mapItemList: ITDMapItemList?
     public var name: String
     public var matchQuality: Int
-    public var lat: Double
-    public var lng: Double
-    public var mapName: String
+    public var lat: Double?
+    public var lng: Double?
+    public var mapName: String?
+    
+    
+    /**
+     District code number of the element. Also known as 'Gemeindekennziffer' (GKZ or OMC).
+     */
     public var omc: Int
+    
     public var placeID: Int
     public var type: ObjectFilter
     public var anyType: String

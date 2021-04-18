@@ -56,6 +56,37 @@ public struct ObjectFilter: OptionSet {
      */
     public static let postcode         = ObjectFilter(rawValue: 1 << 6)
 
+    public static func displayName(_ objectFilter: ObjectFilter, includeNoFilterCase: Bool = false) -> String {
+        var list: [String] = []
+        
+        if objectFilter.contains(.noFilter) && includeNoFilterCase {
+            list.append("Kein Filter")
+        }
+        if objectFilter.contains(.places) {
+            list.append("Ort")
+        }
+        if objectFilter.contains(.stops) {
+            list.append("Haltestelle")
+        }
+        if objectFilter.contains(.streets) {
+            list.append("Straße")
+        }
+        if objectFilter.contains(.addresses) {
+            list.append("Adresse")
+        }
+        if objectFilter.contains(.crossing) {
+            list.append("Kreuzung")
+        }
+        if objectFilter.contains(.pointsOfInterest) {
+            list.append("Interessanter Ort")
+        }
+        if objectFilter.contains(.postcode) {
+            list.append("Postleitzahl")
+        }
+        
+        return ListFormatter().string(from: list) ?? "nicht bekannt"
+    }
+    
 }
 
 extension ObjectFilter: Decodable {
