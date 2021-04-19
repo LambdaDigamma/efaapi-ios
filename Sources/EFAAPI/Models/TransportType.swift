@@ -104,4 +104,65 @@ public enum TransportType: Int, Codable, CaseIterable {
     */
     case communityBus = 19
     
+    public var localizedName: String {
+        switch self {
+            case .train:
+                return "Zug"
+            
+            case .suburbanRailway:
+                return "S-Bahn"
+                
+            case .subway:
+                return "U-Bahn"
+                
+            case .metro:
+                return "Stadtbahn"
+                
+            case .tram:
+                return "Straßenbahn"
+                
+            case .cityBus:
+                return "Stadtbus"
+                
+            case .regionalBus:
+                return "Regionalbus"
+                
+            case .rapidBus:
+                return "Schnellbus"
+                
+            case .cableCar:
+                return "Seil-/Zahnradbahn"
+                
+            case .onCallBus:
+                return "AST/Rufbus"
+                
+            case .suspensionRailway:
+                return "Schwebebahn"
+            
+            case .plane:
+                return "Flugzeug"
+                
+            case .regionalTrain:
+                return "Regionalzug"
+                
+            case .nationalTrain:
+                return "Nationaler Zug"
+                
+            case .internationalTrain:
+                return "Internationaler Zug"
+                
+            case .highSpeedTrain:
+                return "Hochgeschwindigkeitszug"
+                
+            case .railReplacementService:
+                return "Schienenersatzverkehr"
+                
+            case .shuttleTrain:
+                return "Schuttlezug"
+                
+            case .communityBus:
+                return "Bürgerbus"
+        }
+    }
+    
 }

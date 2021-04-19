@@ -228,8 +228,6 @@ extension EFAManager {
         
         let request = URLRequest(url: url)
         
-        
-        
         return URLSession.shared.dataTaskPublisher(for: request)
             .tryMap { (data, response) -> DepartureMonitorResponse in
                 
@@ -244,6 +242,7 @@ extension EFAManager {
                 
                 do {
                     let response = try decoder.decode(DepartureMonitorResponse.self, from: data)
+                    print(response)
                     return response
                 } catch let error as DecodingError {
                     print(error)

@@ -16,6 +16,19 @@ public struct ITDDateTime: Codable, DynamicNodeDecoding {
     public var date: ITDDate?
     public var time: ITDTime?
     
+    public var parsedDate: Date? {
+        if let date = date, let time = time {
+            return DateComponents(
+                calendar: Calendar.init(identifier: .gregorian),
+                year: date.year,
+                month: date.month,
+                day: date.day,
+                hour: time.hour,
+                minute: time.minute
+            ).date
+        }
+        return nil
+    }
     
     public enum CodingKeys: String, CodingKey {
         case ttpFrom
@@ -31,6 +44,25 @@ public struct ITDDateTime: Codable, DynamicNodeDecoding {
             default:
                 return .element
         }
+    }
+    
+    public static func now(_ now: Date = Date()) -> ITDDateTime {
+        return stub(date: now)
+    }
+    
+    public static func stub(date: Date = Date()) -> ITDDateTime {
+        
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        
+        return ITDDateTime(ttpFrom: nil,
+                           ttpTo: nil,
+                           date: ITDDate(weekday: 0,
+                                         year: components.year ?? 2020,
+                                         month: components.month ?? 1,
+                                         day: components.day ?? 1),
+                           time: ITDTime(hour: components.hour ?? 10,
+                                         minute: components.minute ?? 0))
     }
     
 }

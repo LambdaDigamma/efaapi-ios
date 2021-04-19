@@ -7,22 +7,23 @@
 
 import Foundation
 import XMLCoder
+import ModernNetworking
 
-public struct ITDDeparture: Codable, DynamicNodeDecoding {
+public struct ITDDeparture: Codable, DynamicNodeDecoding, BaseStubbable {
     
-    public let regularDateTime: ITDDateTime
-    public let actualDateTime: ITDDateTime?
-    public let servingLine: ITDServingLine
+    public var regularDateTime: ITDDateTime
+    public var actualDateTime: ITDDateTime?
+    public var servingLine: ITDServingLine
     
-    public let stopID: Stop.ID
-    public let stopName: String
-    public let nameWO: String
-    public let latitude: Double
-    public let longitude: Double
-    public let platform: Int
-    public let platformName: String?
-    public let plannedPlatformName: String?
-    public let countdown: Int
+    public var stopID: Stop.ID
+    public var stopName: String
+    public var nameWO: String
+    public var latitude: Double
+    public var longitude: Double
+    public var platform: String
+    public var platformName: String?
+    public var plannedPlatformName: String?
+    public var countdown: Int
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
@@ -49,6 +50,23 @@ public struct ITDDeparture: Codable, DynamicNodeDecoding {
         case platformName = "platformName"
         case plannedPlatformName = "plannedPlatformName"
         case countdown = "countdown"
+    }
+    
+    public static func stub() -> ITDDeparture {
+        return ITDDeparture(
+            regularDateTime: ITDDateTime.stub(),
+            actualDateTime: nil,
+            servingLine: ITDServingLine.stub(),
+            stopID: 0,
+            stopName: "Duisburg Hbf",
+            nameWO: "Duisburg Hbf",
+            latitude: 51.43203,
+            longitude: 6.77828,
+            platform: "5",
+            platformName: nil,
+            plannedPlatformName: nil,
+            countdown: 0
+        )
     }
     
 }

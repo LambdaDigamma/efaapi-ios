@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct ITDServingLine: Codable, DynamicNodeDecoding {
+public struct ITDServingLine: Codable, DynamicNodeDecoding, BaseStubbable {
     
     public let direction: String
     public let directionFrom: String?
@@ -16,8 +16,8 @@ public struct ITDServingLine: Codable, DynamicNodeDecoding {
     public let code: String
     public let number: String
     public let symbol: String
-    public let `operator`: ITDOperator
-    public let destinationID: Int
+    public let `operator`: ITDOperator?
+    public let destinationID: String
     public let transportType: TransportType
     
     public let productID: Int
@@ -53,6 +53,22 @@ public struct ITDServingLine: Codable, DynamicNodeDecoding {
         case symbol = "symbol"
         case transportType = "motType"
         case productID = "productId"
+    }
+    
+    public static func stub() -> ITDServingLine {
+        return ITDServingLine(direction: "DU-Hbf",
+                              directionFrom: nil,
+                              descriptionText: "Geldern Bf - Kamp-Lintfort - Moers - Duisburg Hbf",
+                              code: "5",
+                              number: "SB30",
+                              symbol: "SB30",
+                              operator: nil,
+                              destinationID: "",
+                              transportType: .rapidBus,
+                              productID: 0,
+                              stateless: "",
+                              realtime: false,
+                              valid: nil)
     }
     
 }
