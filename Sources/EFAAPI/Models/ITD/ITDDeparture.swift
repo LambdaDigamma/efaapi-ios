@@ -7,7 +7,6 @@
 
 import Foundation
 import XMLCoder
-import ModernNetworking
 
 public struct ITDDeparture: Codable, DynamicNodeDecoding, BaseStubbable {
     

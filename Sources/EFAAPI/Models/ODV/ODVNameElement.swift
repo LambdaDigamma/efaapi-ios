@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct ODVNameElement: Codable, DynamicNodeDecoding {
+public struct ODVNameElement: Codable, DynamicNodeDecoding, BaseStubbable {
     
     public var id: Int?
     public var listIndex: Int?
@@ -89,6 +89,39 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding {
             default:
                 return .attribute
         }
+    }
+    
+    public static func stub() -> ODVNameElement {
+        return ODVNameElement(
+            id: nil,
+            listIndex: nil,
+            mapItemList: nil,
+            name: "Duisburg Hbf",
+            matchQuality: 1,
+            lat: 51.43045,
+            lng: 6.77453,
+            mapName: "WGS84[DD.DDDDD]",
+            omc: 5112000,
+            placeID: 20,
+            type: nil,
+            anyType: nil,
+            locality: "Duisburg",
+            objectName: "Duisburg Hbf",
+            buildingName: "Duisburg Hbf",
+            buildingNumber: "1",
+            postcode: "47051",
+            streetName: "Portsmouthplatz",
+            nameKey: nil,
+            mainLocality: "Duisburg",
+            stateless: "",
+            value: nil,
+            stopID: 20016032,
+            isTransferStop: nil,
+            tariffArea: nil,
+            tariffAreaName: nil,
+            tariffLayer1: nil,
+            tariffLayer2: nil
+        )
     }
     
 }

@@ -10,20 +10,20 @@ import XMLCoder
 
 public struct ITDServingLine: Codable, DynamicNodeDecoding, BaseStubbable {
     
-    public let direction: String
-    public let directionFrom: String?
-    public let descriptionText: String
-    public let code: String
-    public let number: String
-    public let symbol: String
-    public let `operator`: ITDOperator?
-    public let destinationID: String
-    public let transportType: TransportType
+    public var direction: String
+    public var directionFrom: String?
+    public var descriptionText: String
+    public var code: String
+    public var number: String
+    public var symbol: String
+    public var `operator`: ITDOperator?
+    public var destinationID: String
+    public var transportType: TransportType
     
-    public let productID: Int
-    public let stateless: String
-    public let realtime: Bool // TODO: Validate whether this decoding works.
-    public let valid: String?
+    public var productID: Int
+    public var stateless: String
+    public var realtime: Bool // TODO: Validate whether this decoding works.
+    public var valid: String?
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {

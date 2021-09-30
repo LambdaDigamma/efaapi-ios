@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct ODVName: Codable, DynamicNodeDecoding {
+public struct ODVName: Codable, DynamicNodeDecoding, BaseStubbable {
     
     public var state: String
     public var method: String?
@@ -31,6 +31,15 @@ public struct ODVName: Codable, DynamicNodeDecoding {
             default:
                 return .element
         }
+    }
+    
+    public static func stub() -> ODVName {
+        return ODVName(
+            state: "identified",
+            method: nil,
+            elements: nil,
+            input: nil
+        )
     }
     
 }
