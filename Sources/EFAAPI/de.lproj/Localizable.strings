@@ -1,0 +1,9 @@
+"ObjectFilter.noFilter" = "Kein Filter";
+"ObjectFilter.places" = "Ort";
+"ObjectFilter.stops" = "Haltestelle";
+"ObjectFilter.streets" = "Straße";
+"ObjectFilter.addresses" = "Adresse";
+"ObjectFilter.crossing" = "Kreuzung";
+"ObjectFilter.pointsOfInterest" = "Interessanter Ort";
+"ObjectFilter.postcode" = "Postleitzahl";
+"ObjectFilter.unknown" = "Unbekannt";

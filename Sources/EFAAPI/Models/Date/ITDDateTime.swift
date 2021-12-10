@@ -8,9 +8,13 @@
 import Foundation
 import XMLCoder
 
-public struct ITDDateTime: Codable, DynamicNodeDecoding {
+public struct ITDDateTime: Codable, Equatable, DynamicNodeDecoding {
     
+    
+    /// Represents the start of the current schedule
     public var ttpFrom: String?
+    
+    /// Represents the end of the current schedule
     public var ttpTo: String?
     
     public var date: ITDDate?
@@ -19,7 +23,7 @@ public struct ITDDateTime: Codable, DynamicNodeDecoding {
     public var parsedDate: Date? {
         if let date = date, let time = time {
             return DateComponents(
-                calendar: Calendar.init(identifier: .gregorian),
+                calendar: Calendar(identifier: .gregorian),
                 year: date.year,
                 month: date.month,
                 day: date.day,
@@ -31,8 +35,8 @@ public struct ITDDateTime: Codable, DynamicNodeDecoding {
     }
     
     public enum CodingKeys: String, CodingKey {
-        case ttpFrom
-        case ttpTo
+        case ttpFrom = "ttpFrom"
+        case ttpTo = "ttpTo"
         case date = "itdDate"
         case time = "itdTime"
     }
@@ -55,14 +59,20 @@ public struct ITDDateTime: Codable, DynamicNodeDecoding {
         let calendar = Calendar(identifier: .gregorian)
         let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         
-        return ITDDateTime(ttpFrom: nil,
-                           ttpTo: nil,
-                           date: ITDDate(weekday: 0,
-                                         year: components.year ?? 2020,
-                                         month: components.month ?? 1,
-                                         day: components.day ?? 1),
-                           time: ITDTime(hour: components.hour ?? 10,
-                                         minute: components.minute ?? 0))
+        return ITDDateTime(
+            ttpFrom: nil,
+            ttpTo: nil,
+            date: ITDDate(
+                weekday: 0,
+                year: components.year ?? 2020,
+                month: components.month ?? 1,
+                day: components.day ?? 1
+            ),
+            time: ITDTime(
+                hour: components.hour ?? 10,
+                minute: components.minute ?? 0
+            )
+        )
     }
     
 }

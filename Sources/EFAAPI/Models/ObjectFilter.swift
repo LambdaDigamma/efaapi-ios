@@ -56,35 +56,39 @@ public struct ObjectFilter: OptionSet {
      */
     public static let postcode         = ObjectFilter(rawValue: 1 << 6)
 
-    public static func displayName(_ objectFilter: ObjectFilter, includeNoFilterCase: Bool = false) -> String {
+    public static func displayName(
+        _ objectFilter: ObjectFilter,
+        includeNoFilterCase: Bool = false
+    ) -> String {
+        
         var list: [String] = []
         
         if objectFilter.contains(.noFilter) && includeNoFilterCase {
-            list.append("Kein Filter")
+            list.append(PackageStrings.ObjectFilter.noFilter)
         }
         if objectFilter.contains(.places) {
-            list.append("Ort")
+            list.append(PackageStrings.ObjectFilter.places)
         }
         if objectFilter.contains(.stops) {
-            list.append("Haltestelle")
+            list.append(PackageStrings.ObjectFilter.stops)
         }
         if objectFilter.contains(.streets) {
-            list.append("Straße")
+            list.append(PackageStrings.ObjectFilter.streets)
         }
         if objectFilter.contains(.addresses) {
-            list.append("Adresse")
+            list.append(PackageStrings.ObjectFilter.addresses)
         }
         if objectFilter.contains(.crossing) {
-            list.append("Kreuzung")
+            list.append(PackageStrings.ObjectFilter.crossing)
         }
         if objectFilter.contains(.pointsOfInterest) {
-            list.append("Interessanter Ort")
+            list.append(PackageStrings.ObjectFilter.pointsOfInterest)
         }
         if objectFilter.contains(.postcode) {
-            list.append("Postleitzahl")
+            list.append(PackageStrings.ObjectFilter.postcode)
         }
         
-        return ListFormatter().string(from: list) ?? "nicht bekannt"
+        return ListFormatter().string(from: list) ?? PackageStrings.ObjectFilter.unknown
     }
     
 }

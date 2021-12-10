@@ -19,6 +19,7 @@ public struct ITDServingLine: Codable, DynamicNodeDecoding, BaseStubbable {
     public var `operator`: ITDOperator?
     public var destinationID: String
     public var transportType: TransportType
+    public var noTrain: ITDNoTrain
     
     public var productID: Int
     public var stateless: String
@@ -27,7 +28,7 @@ public struct ITDServingLine: Codable, DynamicNodeDecoding, BaseStubbable {
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
-            case CodingKeys.operator, CodingKeys.descriptionText:
+            case CodingKeys.operator, CodingKeys.descriptionText, CodingKeys.noTrain:
                 return .element
             case CodingKeys.direction, CodingKeys.stateless,
                  CodingKeys.destinationID, CodingKeys.realtime,
@@ -53,22 +54,26 @@ public struct ITDServingLine: Codable, DynamicNodeDecoding, BaseStubbable {
         case symbol = "symbol"
         case transportType = "motType"
         case productID = "productId"
+        case noTrain = "itdNoTrain"
     }
     
     public static func stub() -> ITDServingLine {
-        return ITDServingLine(direction: "DU-Hbf",
-                              directionFrom: nil,
-                              descriptionText: "Geldern Bf - Kamp-Lintfort - Moers - Duisburg Hbf",
-                              code: "5",
-                              number: "SB30",
-                              symbol: "SB30",
-                              operator: nil,
-                              destinationID: "",
-                              transportType: .rapidBus,
-                              productID: 0,
-                              stateless: "",
-                              realtime: false,
-                              valid: nil)
+        return ITDServingLine(
+            direction: "DU-Hbf",
+            directionFrom: nil,
+            descriptionText: "Geldern Bf - Kamp-Lintfort - Moers - Duisburg Hbf",
+            code: "5",
+            number: "SB30",
+            symbol: "SB30",
+            operator: nil,
+            destinationID: "",
+            transportType: .rapidBus,
+            noTrain: ITDNoTrain(name: "Niederflurbus", fullName: nil, delay: nil),
+            productID: 0,
+            stateless: "",
+            realtime: false,
+            valid: nil
+        )
     }
     
 }
