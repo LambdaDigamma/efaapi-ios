@@ -10,10 +10,10 @@ import XMLCoder
 
 public enum ODVUsageType: String, Codable {
     
-    case origin
-    case destination
-    case via
-    case dm
-    case sf
+    case origin = "origin"
+    case destination = "destination"
+    case via = "via"
+    case dm = "dm"
+    case sf = "sf"
     
 }

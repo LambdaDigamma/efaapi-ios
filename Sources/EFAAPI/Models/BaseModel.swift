@@ -15,21 +15,6 @@ internal protocol BaseModel: Model {
 
 extension BaseModel {
     
-//    static var decoder: JSONDecoder = {
-//
-//        let decoder = XMLDecoder()
-//        let format = DateFormatter()
-//
-//        format.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-//
-//        if #available(iOS 10.0, *) {
-//            decoder.dateDecodingStrategy = .formatted(format)
-//        }
-//
-//
-//
-//    }
-    
 }
 
 public extension HTTPResult {

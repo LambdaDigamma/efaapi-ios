@@ -10,11 +10,10 @@ import XMLCoder
 
 public struct ITDDateTime: Codable, Equatable, DynamicNodeDecoding {
     
-    
-    /// Represents the start of the current schedule
+    /// Represents the start of the current timetable period (ttp)
     public var ttpFrom: String?
     
-    /// Represents the end of the current schedule
+    /// Represents the end of the current timetable period (ttp)
     public var ttpTo: String?
     
     public var date: ITDDate?

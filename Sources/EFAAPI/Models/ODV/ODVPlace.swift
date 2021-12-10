@@ -21,5 +21,4 @@ public struct ODVPlace: Codable, DynamicNodeDecoding {
         }
     }
     
-    
 }

@@ -3,9 +3,7 @@ import Combine
 import ModernNetworking
 @testable import EFAAPI
 
-final class EFAManagerTests: XCTestCase {
-    
-    private var cancellables = Set<AnyCancellable>()
+final class EFAManagerTests: IntegrationTestCase {
     
     func test_has_4_query_endpoints() {
         XCTAssertEqual(QueryEndpoints.allCases.count, 4)
@@ -61,20 +59,6 @@ final class EFAManagerTests: XCTestCase {
             .store(in: &cancellables)
         
         wait(for: [expectation], timeout: 10)
-        
-    }
-    
-    func defaultLoader() -> HTTPLoader {
-        
-        let environment = ServerEnvironment(scheme: "http", host: "openservice.vrr.de", pathPrefix: "/vrr")
-        
-        let resetGuard = ResetGuardLoader()
-        let applyEnvironment = ApplyEnvironmentLoader(environment: environment)
-        let session = URLSession(configuration: .default)
-        let sessionLoader = URLSessionLoader(session)
-        let printLoader = PrintLoader()
-        
-        return (resetGuard --> applyEnvironment --> printLoader --> sessionLoader)!
         
     }
     
