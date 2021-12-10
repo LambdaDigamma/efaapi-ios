@@ -3,7 +3,7 @@ import Combine
 import ModernNetworking
 @testable import EFAAPI
 
-final class EFAManagerMockedTests: XCTestCase {
+final class EFAServiceMockedTests: XCTestCase {
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -12,10 +12,10 @@ final class EFAManagerMockedTests: XCTestCase {
         let expectation = XCTestExpectation()
         
         let loader = FileLoader(resource: "Data/StopFinder_List", fileExtension: "xml")
-        let manager = EFAManager(loader: loader)
+        let service = DefaultTransitService(loader: loader)
         
-        manager
-            .sendStopFinderRequest(searchText: "König")
+        service
+            .sendRawStopFinderRequest(searchText: "König")
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
             } receiveValue: { (response: StopFinderResponse) in
@@ -56,10 +56,10 @@ final class EFAManagerMockedTests: XCTestCase {
         let expectation = XCTestExpectation()
 
         let loader = FileLoader(resource: "Data/StopFinder_List_ObjectFilter", fileExtension: "xml")
-        let manager = EFAManager(loader: loader)
+        let service = DefaultTransitService(loader: loader)
 
-        manager
-            .sendStopFinderRequest(searchText: "Duisburg Hbf", objectFilter: [.stops])
+        service
+            .sendRawStopFinderRequest(searchText: "Duisburg Hbf", objectFilter: [.stops])
             .sink { (completion: Subscribers.Completion<HTTPError>) in
 
                 switch (completion) {

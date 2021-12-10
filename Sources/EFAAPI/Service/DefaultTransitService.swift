@@ -1,22 +1,19 @@
+//
+//  DefaultEFAService.swift
+//  
+//
+//  Created by Lennart Fischer on 10.12.21.
+//
+
 import Foundation
 import XMLCoder
 import Combine
 import ModernNetworking
 
-public enum Station {
-    public typealias ID = Int
-}
-
-// TODO: Delay
-// enum Delay: Codable {
-//
-// }
-
-public class EFAManager {
+public class DefaultTransitService {
     
-    public let languageCode: String
+    private let languageCode: String
     private let loader: HTTPLoader
-    
     private let standardCoordinateOutputFormat: CoordinateOutputFormat = .wgs84
     
     public init(
@@ -27,53 +24,16 @@ public class EFAManager {
         self.languageCode = languageCode
     }
     
-//    internal func buildCommonURLRequest(
-//        for endpoint: QueryEndpoints,
-//        addition: String = ""
-//    ) throws -> URLRequest {
-//
-//        guard let url = URL(string: self.endpoint + endpoint.rawValue + addition)
-//            else { throw EndpointError.invalidURL }
-//
-//        let request = URLRequest(url: url)
-//
-//        return request
-//    }
-    
-    public struct StandardRequestParameters: Codable {
-        var isStateless: Bool = true
-        var isLocationServerActive: Bool = true
-        var coordinateOutputFormat: CoordinateOutputFormat = .wgs84
-    }
-    
-    public static let defaultDecoder: XMLDecoder = {
-        
-        let decoder = XMLDecoder()
-        let format = DateFormatter()
-        
-        format.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        
-        decoder.dateDecodingStrategy = .formatted(format)
-        
-        return decoder
-        
-    }()
-    
-}
-
-// MARK: - Stop Finder
-
-extension EFAManager {
+    // MARK: - Stop Finder
     
     /// Send a stop finder request with a specified search text
     /// and receive a stop finder response.
-    ///
     ///
     /// - Parameters:
     ///   - searchText: Search term
     ///   - objectFilter: Specifies the stop types returned by the api (`ObjectFilter`)
     /// - Returns: The stop finder response publisher
-    public func sendStopFinderRequest(
+    public func sendRawStopFinderRequest(
         searchText: String,
         objectFilter: ObjectFilter = .noFilter
     ) -> AnyPublisher<StopFinderResponse, HTTPError> {
@@ -95,7 +55,7 @@ extension EFAManager {
         return Deferred {
             
             return Future<StopFinderResponse, HTTPError> { promise in
-
+                
                 self.loader.load(request) { (result: HTTPResult) in
                     
                     result.decodingXML(
@@ -113,20 +73,18 @@ extension EFAManager {
                     }
                     
                 }
-
+                
             }
             
         }.eraseToAnyPublisher()
         
     }
     
-}
-
-// MARK: - Departure Monitor
-
-extension EFAManager {
+    // MARK: - Departure Monitor
     
-    public func sendDepartureMonitorRequest(id: Station.ID) -> AnyPublisher<DepartureMonitorResponse, HTTPError> {
+    public func sendRawDepartureMonitorRequest(
+        id: Station.ID
+    ) -> AnyPublisher<DepartureMonitorResponse, HTTPError> {
         
         var request = HTTPRequest(
             method: .get,
@@ -171,18 +129,20 @@ extension EFAManager {
         }.eraseToAnyPublisher()
         
     }
+    
+    // MARK: - Helpers
+    
+    public static let defaultDecoder: XMLDecoder = {
         
-}
-
-
-extension EFAManager {
-    
-    public enum ConfigError: Error {
-        case invalidEndpoint
-    }
-    
-    public enum EndpointError: Error {
-        case invalidURL
-    }
+        let decoder = XMLDecoder()
+        let format = DateFormatter()
+        
+        format.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        
+        decoder.dateDecodingStrategy = .formatted(format)
+        
+        return decoder
+        
+    }()
     
 }

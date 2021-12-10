@@ -3,7 +3,7 @@ import Combine
 import ModernNetworking
 @testable import EFAAPI
 
-final class EFAManagerTests: IntegrationTestCase {
+final class EFAServiceTests: IntegrationTestCase {
     
     func test_has_4_query_endpoints() {
         XCTAssertEqual(QueryEndpoints.allCases.count, 4)
@@ -14,10 +14,10 @@ final class EFAManagerTests: IntegrationTestCase {
         let expectation = XCTestExpectation()
         
         let httpLoader = defaultLoader()
-        let manager = EFAManager(loader: httpLoader)
+        let service = DefaultTransitService(loader: httpLoader)
         
-        manager
-            .sendStopFinderRequest(searchText: "König")
+        service
+            .sendRawStopFinderRequest(searchText: "König")
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
             } receiveValue: { (response: StopFinderResponse) in
@@ -38,10 +38,10 @@ final class EFAManagerTests: IntegrationTestCase {
         let expectation = XCTestExpectation()
         
         let httpLoader = defaultLoader()
-        let manager = EFAManager(loader: httpLoader)
+        let service = DefaultTransitService(loader: httpLoader)
         
-        manager
-            .sendStopFinderRequest(searchText: "Duisburg Hbf", objectFilter: [.stops])
+        service
+            .sendRawStopFinderRequest(searchText: "Duisburg Hbf", objectFilter: [.stops])
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
                 switch (completion) {

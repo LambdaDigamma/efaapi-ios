@@ -17,15 +17,14 @@ final class DepartureMonitorTests: IntegrationTestCase {
         let expectation = XCTestExpectation()
         
         let loader = defaultLoader()
-        let manager = EFAManager(loader: loader)
-        let request = manager.sendDepartureMonitorRequest(id: 20016032)
+        let service = DefaultTransitService(loader: loader)
+        let request = service.sendRawDepartureMonitorRequest(id: 20016032)
         
         request.sink { (completion: Subscribers.Completion<HTTPError>) in
             switch completion {
                 case .finished:
                     expectation.fulfill()
                 case .failure(let error):
-                    print(error.underlyingError)
                     XCTFail(error.localizedDescription)
             }
         } receiveValue: { (response: DepartureMonitorResponse) in
