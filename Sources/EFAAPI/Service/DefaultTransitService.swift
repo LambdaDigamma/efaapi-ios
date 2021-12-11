@@ -10,7 +10,7 @@ import XMLCoder
 import Combine
 import ModernNetworking
 
-public class DefaultTransitService {
+public class DefaultTransitService: TransitService {
     
     private let languageCode: String
     private let loader: HTTPLoader
@@ -35,7 +35,8 @@ public class DefaultTransitService {
     /// - Returns: The stop finder response publisher
     public func sendRawStopFinderRequest(
         searchText: String,
-        objectFilter: ObjectFilter = .noFilter
+        objectFilter: ObjectFilter = .noFilter,
+        maxNumberOfResults: Int = 50
     ) -> AnyPublisher<StopFinderResponse, HTTPError> {
         
         var request = HTTPRequest(
@@ -48,8 +49,9 @@ public class DefaultTransitService {
             URLQueryItem(name: "locationServerActive", value: "1"),
             URLQueryItem(name: "anyObjFilter_sf", value: "\(objectFilter.rawValue)"),
             URLQueryItem(name: "type_sf", value: "any"),
+            URLQueryItem(name: "anyMaxSizeHitList", value: "\(maxNumberOfResults)"),
             URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
-            URLQueryItem(name: "UTFMacro", value: "1")
+            URLQueryItem(name: "UTFMacro", value: "1"),
         ]
         
         return Deferred {
@@ -77,6 +79,25 @@ public class DefaultTransitService {
             }
             
         }.eraseToAnyPublisher()
+        
+    }
+    
+    public func findTransitLocation(
+        for searchTerm: String,
+        filtering objectFilter: ObjectFilter
+    ) -> AnyPublisher<[TransitLocation], HTTPError> {
+        
+        self.sendRawStopFinderRequest(searchText: searchTerm, objectFilter: objectFilter)
+            .map({ (response: StopFinderResponse) in
+                return response.stopFinderRequest
+                    .odv
+                    .name?
+                    .elements?
+                    .sorted(by: { $0.matchQuality > $1.matchQuality })
+                    .map({ TransitLocation(odvNameElement: $0) }) ?? []
+            })
+            .replaceEmpty(with: [])
+            .eraseToAnyPublisher()
         
     }
     
@@ -144,5 +165,19 @@ public class DefaultTransitService {
         return decoder
         
     }()
+    
+    public static func defaultLoader() -> HTTPLoader {
+        
+        let environment = ServerEnvironment(scheme: "https", host: "openservice.vrr.de", pathPrefix: "/vrr")
+        
+        let resetGuard = ResetGuardLoader()
+        let applyEnvironment = ApplyEnvironmentLoader(environment: environment)
+        let session = URLSession(configuration: .default)
+        let sessionLoader = URLSessionLoader(session)
+        let printLoader = PrintLoader()
+        
+        return (resetGuard --> applyEnvironment --> printLoader --> sessionLoader)!
+        
+    }
     
 }

@@ -3,7 +3,7 @@ import Combine
 import ModernNetworking
 @testable import EFAAPI
 
-final class EFAServiceTests: IntegrationTestCase {
+final class DefaultTransitServiceTests: IntegrationTestCase {
     
     func test_has_4_query_endpoints() {
         XCTAssertEqual(QueryEndpoints.allCases.count, 4)

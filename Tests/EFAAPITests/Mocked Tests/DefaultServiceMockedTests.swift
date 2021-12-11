@@ -3,7 +3,7 @@ import Combine
 import ModernNetworking
 @testable import EFAAPI
 
-final class EFAServiceMockedTests: XCTestCase {
+final class DefaultServiceMockedTests: XCTestCase {
     
     private var cancellables = Set<AnyCancellable>()
     

@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct ObjectFilter: OptionSet {
-
+public struct ObjectFilter: OptionSet, Hashable, CaseIterable {
+    
     public typealias RawValue = Int
     public let rawValue: RawValue
     
@@ -56,6 +56,12 @@ public struct ObjectFilter: OptionSet {
      */
     public static let postcode         = ObjectFilter(rawValue: 1 << 6)
 
+    public static var allCases: [ObjectFilter] = [
+        ObjectFilter.places,
+        ObjectFilter.stops,
+        ObjectFilter.streets,
+    ]
+    
     public static func displayName(
         _ objectFilter: ObjectFilter,
         includeNoFilterCase: Bool = false

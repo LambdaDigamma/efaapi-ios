@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TripConfiguration.swift
 //  
 //
 //  Created by Lennart Fischer on 26.07.20.

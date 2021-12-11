@@ -9,6 +9,6 @@ public enum Station {
 
 public protocol TransitService: AnyObject {
     
-    
+    func findTransitLocation(for searchTerm: String, filtering objectFilter: ObjectFilter) -> AnyPublisher<[TransitLocation], HTTPError>
     
 }

@@ -1,5 +1,5 @@
 //
-//  DepartureMonitorTests.swift
+//  DefaultDepartureMonitorTests.swift
 //  
 //
 //  Created by Lennart Fischer on 18.04.21.
@@ -10,7 +10,7 @@ import Combine
 import ModernNetworking
 @testable import EFAAPI
 
-final class DepartureMonitorTests: IntegrationTestCase {
+final class DefaultDepartureMonitorTests: IntegrationTestCase {
     
     func test_departureMonitorRequest() {
         

@@ -19,15 +19,12 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding, BaseStubbable {
     public var lng: Double?
     public var mapName: String?
     
-    
-    /**
-     District code number of the element. Also known as 'Gemeindekennziffer' (GKZ or OMC).
-     */
+    /// District code number of the element. Also known as 'Gemeindekennziffer' (GKZ or OMC).
     public var omc: Int?
     
     public var placeID: Int?
     public var type: ObjectFilter?
-    public var anyType: String?
+    public var anyType: TransitLocationType?
     public var locality: String?
     public var objectName: String?
     public var buildingName: String?

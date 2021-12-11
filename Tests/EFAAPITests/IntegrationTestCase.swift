@@ -16,7 +16,7 @@ class IntegrationTestCase: XCTestCase {
     
     func defaultLoader() -> HTTPLoader {
         
-        let environment = ServerEnvironment(scheme: "http", host: "openservice.vrr.de", pathPrefix: "/vrr")
+        let environment = ServerEnvironment(scheme: "https", host: "openservice.vrr.de", pathPrefix: "/vrr")
         
         let resetGuard = ResetGuardLoader()
         let applyEnvironment = ApplyEnvironmentLoader(environment: environment)

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import EFAAPI
-import WidgetKit
 
 #if canImport(UIKit)
 import UIKit

@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
-import WidgetKit
 import EFAAPI
+
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 struct DepartureMonitorView: View {
     
