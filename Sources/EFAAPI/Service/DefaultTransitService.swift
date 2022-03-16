@@ -41,7 +41,7 @@ public class DefaultTransitService: TransitService {
         
         var request = HTTPRequest(
             method: .get,
-            path: "/vrr/" + QueryEndpoints.stopFinder.rawValue
+            path: QueryEndpoints.stopFinder.rawValue
         )
         
         request.queryItems = [
@@ -109,7 +109,7 @@ public class DefaultTransitService: TransitService {
         
         var request = HTTPRequest(
             method: .get,
-            path: "/vrr/" + QueryEndpoints.depatureMonitor.rawValue
+            path: QueryEndpoints.depatureMonitor.rawValue
         )
         
         request.queryItems = [

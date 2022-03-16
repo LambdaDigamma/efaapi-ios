@@ -8,6 +8,9 @@
 import SwiftUI
 import EFAAPI
 
+#if canImport(UIKit)
+import UIKit
+
 struct DepartureView: View {
     
     @ObservedObject var viewModel: DepartureViewModel
@@ -92,3 +95,5 @@ struct DepartureView_Previews: PreviewProvider {
     }
     
 }
+
+#endif

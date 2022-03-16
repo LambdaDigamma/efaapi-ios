@@ -8,6 +8,8 @@
 import SwiftUI
 import EFAAPI
 
+#if canImport(UIKit)
+
 public struct TransitLocationSearchView: View {
     
     @ObservedObject var viewModel: TransitLocationSearchViewModel
@@ -84,3 +86,5 @@ struct TransitLocationSearchView_Previews: PreviewProvider {
         
     }
 }
+
+#endif

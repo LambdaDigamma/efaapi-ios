@@ -8,6 +8,8 @@
 import SwiftUI
 import EFAAPI
 
+#if canImport(UIKit)
+
 public struct DepartureMonitorForeground: View {
     
     public let stationName: String
@@ -86,3 +88,5 @@ struct DepartureMonitorForeground_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
     }
 }
+
+#endif

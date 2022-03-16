@@ -8,6 +8,8 @@
 import SwiftUI
 import MapKit
 
+#if canImport(UIKit)
+
 struct MapSnapshotView: View {
     
     let location: CLLocationCoordinate2D
@@ -80,3 +82,5 @@ struct MapSnapshotView_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
     }
 }
+
+#endif

@@ -12,6 +12,8 @@ import EFAAPI
 import WidgetKit
 #endif
 
+#if canImport(UIKit)
+
 public struct DepartureMonitorView: View {
     
     @Environment(\.colorScheme) var colorScheme
@@ -143,3 +145,5 @@ struct DepartureMonitorView_Previews: PreviewProvider {
     }
     
 }
+
+#endif
