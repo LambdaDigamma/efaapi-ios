@@ -7,3 +7,5 @@
 "ObjectFilter.pointsOfInterest" = "Interessanter Ort";
 "ObjectFilter.postcode" = "Postleitzahl";
 "ObjectFilter.unknown" = "Unbekannt";
+
+"DepartureMonitor.lastUpdatedAt" = "Zuletzt aktualisiert: ";

@@ -12,21 +12,17 @@ import EFAAPI
 import WidgetKit
 #endif
 
-struct DepartureMonitorView: View {
-    
-    var viewModel: DepartureMonitorViewModel
+public struct DepartureMonitorView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    static let taskDateFormat: RelativeDateTimeFormatter = {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.formattingContext = .standalone
-        formatter.unitsStyle = .abbreviated
-        formatter.dateTimeStyle = .numeric
-        return formatter
-    }()
+    public var viewModel: DepartureMonitorViewModel
     
-    var cardBackgroundColor: Color {
+    public init(viewModel: DepartureMonitorViewModel) {
+        self.viewModel = viewModel
+    }
+    
+    private var cardBackgroundColor: Color {
         if colorScheme == .light {
             return Color.white
         } else {
@@ -34,11 +30,11 @@ struct DepartureMonitorView: View {
         }
     }
     
-    var body: some View {
+    public var body: some View {
         
         VStack(alignment: .leading, spacing: 8) {
             
-            Text("Duisburg Hbf")
+            Text(viewModel.stationName)
                 .font(.headline)
                 .fontWeight(.bold)
             
@@ -59,12 +55,6 @@ struct DepartureMonitorView: View {
             
             HStack {
                 
-//                    Text("nur ICE 22 & RE 5")
-//                        .layoutPriority(100)
-//                    Spacer()
-//                        .frame(maxWidth: .infinity)
-//                        .layoutPriority(50)
-                
                 HStack {
                     Text("zuletzt aktualisiert: ") +
                     Text(viewModel.date, style: .relative)
@@ -80,6 +70,15 @@ struct DepartureMonitorView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 20)
         .padding(.vertical, 20)
+        .background(ZStack(alignment: .bottomTrailing) {
+            
+            Image("station-background", bundle: .module)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 100)
+                .unredacted()
+            
+        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing))
         .background(cardBackgroundColor)
         
     }
@@ -134,6 +133,12 @@ struct DepartureMonitorView_Previews: PreviewProvider {
             .environment(\.locale, Locale(identifier: "de"))
             .environment(\.colorScheme, .dark)
             .previewLayout(.sizeThatFits)
+        
+        DepartureMonitorView(viewModel: viewModel)
+            .environment(\.locale, Locale(identifier: "de"))
+            .environment(\.colorScheme, .dark)
+            .previewLayout(.sizeThatFits)
+            .redacted(reason: .placeholder)
         
     }
     

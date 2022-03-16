@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct ITDServingLine: Codable, DynamicNodeDecoding, BaseStubbable {
+public struct ITDServingLine: Codable, Equatable, DynamicNodeDecoding, BaseStubbable {
     
     public var direction: String
     public var directionFrom: String?

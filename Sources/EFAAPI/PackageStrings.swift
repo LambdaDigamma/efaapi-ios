@@ -29,4 +29,8 @@ public enum PackageStrings {
         public static let unknown = String.localized("ObjectFilter.unknown")
     }
     
+    public enum DepartureMonitor {
+        public static let lastUpdatedAt = String.localized("DepartureMonitor.lastUpdatedAt")
+    }
+    
 }

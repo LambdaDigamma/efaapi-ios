@@ -37,7 +37,6 @@ public struct TransitLocationSearchView: View {
             .shadow(radius: 4)
             .padding()
             
-            
             ScrollView {
                 
                 LazyVStack {

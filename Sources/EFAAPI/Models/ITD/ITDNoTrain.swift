@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct ITDNoTrain: Codable, DynamicNodeDecoding {
+public struct ITDNoTrain: Codable, Equatable, DynamicNodeDecoding {
     
     public let name: String
     public let fullName: String?

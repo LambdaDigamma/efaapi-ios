@@ -28,7 +28,8 @@ let package = Package(
     targets: [
         .target(
             name: "EFAAPI",
-            dependencies: ["XMLCoder", "ModernNetworking"]
+            dependencies: ["XMLCoder", "ModernNetworking"],
+            resources: [.process("Resources")]
         ),
         .target(
             name: "EFAUI",
