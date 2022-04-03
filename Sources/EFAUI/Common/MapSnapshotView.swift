@@ -8,37 +8,72 @@
 import SwiftUI
 import MapKit
 
+extension View {
+    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+        background(
+            GeometryReader { geometryProxy in
+                Color.clear
+                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+            }
+        )
+        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+    }
+}
+
+private struct SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+}
+
 #if canImport(UIKit)
 
-struct MapSnapshotView: View {
+public struct MapSnapshotView: View {
     
-    let location: CLLocationCoordinate2D
-    var span: CLLocationDegrees = 0.01
+    @Environment(\.colorScheme) var colorScheme
     
-    @State private var snapshotImage: UIImage? = nil
+    public let location: CLLocationCoordinate2D
+    public var span: CLLocationDegrees = 0.01
+    public let annotations: [SnapshotAnnotation]
     
-    var body: some View {
-        GeometryReader { geometry in
-            Group {
-                if let image = snapshotImage {
-                    Image(uiImage: image)
-                } else {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            ProgressView().progressViewStyle(CircularProgressViewStyle())
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                    .background(Color(UIColor.secondarySystemBackground))
-                }
+    public init(
+        location: CLLocationCoordinate2D,
+        span: CLLocationDegrees = 0.01,
+        annotations: [SnapshotAnnotation] = []
+    ) {
+        self.location = location
+        self.span = span
+        self.annotations = annotations
+    }
+    
+    @State private var snapshotImage: UIImage?
+    
+    public var body: some View {
+        
+        ZStack {
+            
+            Color(UIColor.secondarySystemBackground)
+            
+            if let image = snapshotImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ProgressView()
+                    .progressViewStyle(.circular)
             }
-            .onAppear {
-                generateSnapshot(width: geometry.size.width, height: geometry.size.height)
-            }
+            
         }
+        .background(
+            ZStack {
+                // Placeholder
+            }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .readSize(onChange: { size in
+                    generateSnapshot(width: size.width, height: size.height)
+                })
+        )
+        .frame(maxWidth: .infinity)
+        
     }
     
     func generateSnapshot(width: CGFloat, height: CGFloat) {
@@ -51,9 +86,18 @@ struct MapSnapshotView: View {
             )
         )
         
+        if width == 0 || height == 0 || (width == 20 && height == 20) {
+            return
+        }
+        
+        let size = CGSize(width: width, height: height)
+        let trait = UITraitCollection(userInterfaceStyle: colorScheme == .dark ? .dark : .light)
+        let annotationViews: [MKMarkerAnnotationView] = annotations.map { self.generateMapMarker(annotation: $0) }
+        
         let mapOptions = MKMapSnapshotter.Options()
         mapOptions.region = region
-        mapOptions.size = CGSize(width: width, height: height)
+        mapOptions.traitCollection = trait
+        mapOptions.size = size
         mapOptions.showsBuildings = true
         
         let snapshotter = MKMapSnapshotter(options: mapOptions)
@@ -63,10 +107,80 @@ struct MapSnapshotView: View {
                 return
             }
             if let snapshot = snapshotOrNil {
-                self.snapshotImage = snapshot.image
+                
+                let image = snapshot.image
+                let finalImage = UIGraphicsImageRenderer(size: image.size).image { _ in
+                    snapshot.image.draw(at: .zero)
+                    
+                    for view in annotationViews {
+                        
+                        guard let coordinate = view.annotation?.coordinate else {
+                            continue
+                        }
+                        
+                        let point = snapshot.point(for: coordinate)
+                        
+                        view.contentMode = .scaleAspectFit
+                        view.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
+                        view.drawHierarchy(
+                            in: CGRect(
+                                x: point.x - view.bounds.size.width / 2.0,
+                                y: point.y - view.bounds.size.height,
+                                width: view.bounds.width,
+                                height: view.bounds.height
+                            ),
+                            afterScreenUpdates: true
+                        )
+                        
+                    }
+                    
+                }
+                
+                self.snapshotImage = finalImage
+                
             }
+            
         }
         
+    }
+    
+    func generateMapMarker(annotation: SnapshotAnnotation) -> MKMarkerAnnotationView {
+        
+        let marker = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        
+        switch annotation.annotationType {
+            case .image(let image):
+                marker.glyphImage = image
+            case .text(let text):
+                marker.glyphText = text
+            default: break
+        }
+        
+        marker.glyphTintColor = UIColor.white
+        marker.markerTintColor = UIColor.systemBlue
+        
+        return marker
+        
+    }
+    
+}
+
+public class SnapshotAnnotation: NSObject, MKAnnotation {
+    
+    public var coordinate: CLLocationCoordinate2D
+    public var annotationType: SnapshotAnnotationType?
+    
+    public init(
+        coordinate: CLLocationCoordinate2D,
+        annotationType: SnapshotAnnotationType? = nil
+    ) {
+        self.coordinate = coordinate
+        self.annotationType = annotationType
+    }
+    
+    public enum SnapshotAnnotationType {
+        case image(UIImage)
+        case text(String)
     }
     
 }
@@ -78,8 +192,12 @@ struct MapSnapshotView_Previews: PreviewProvider {
             longitude: -122.02962
         )
         MapSnapshotView(location: coordinates)
-            .frame(maxWidth: 200, maxHeight: 200)
+            .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
             .previewLayout(.sizeThatFits)
+        MapSnapshotView(location: coordinates)
+            .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
+            .previewLayout(.sizeThatFits)
+            .preferredColorScheme(.dark)
     }
 }
 
