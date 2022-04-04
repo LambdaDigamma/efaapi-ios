@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct ITDDateTime: Codable, Equatable, DynamicNodeDecoding {
+public struct ITDDateTime: Codable, Equatable, Hashable, DynamicNodeDecoding {
     
     /// Represents the start of the current timetable period (ttp)
     public var ttpFrom: String?

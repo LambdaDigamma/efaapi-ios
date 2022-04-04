@@ -82,6 +82,67 @@ final class DefaultServiceMockedTests: XCTestCase {
 
     }
     
+    func test_decode_identified_trip_request() throws {
+        
+        let data = loadData(resource: "Data/TripRequest", fileExtension: "xml")
+        let decoder = DefaultTransitService.defaultDecoder
+        
+        let response = try decoder.decode(TripResponse.self, from: data)
+        
+        XCTAssertEqual(response.sessionID, "EFAOPENSERVICE2_1730994392")
+        
+//        XCTAssertEqual(response.tripRequest.dateTime.ttpFrom, "20220201")
+//        XCTAssertEqual(response.tripRequest.dateTime.ttpTo, "20220831")
+        
+        print(response)
+        
+    }
+    
+    func test_decode_unknown_via_odv() throws {
+        
+        let data = loadData(resource: "Data/TripODVs", fileExtension: "xml")
+        let decoder = DefaultTransitService.defaultDecoder
+        
+        let response = try decoder.decode(ITDRouteList.self, from: data)
+        
+        print(response)
+        
+    }
+    
+    func test_decode_route_list() throws {
+        
+        let data = loadData(resource: "Data/RouteList", fileExtension: "xml")
+        let decoder = DefaultTransitService.defaultDecoder
+        
+        let response = try decoder.decode(TripResponse.self, from: data)
+        
+        XCTAssertNotNil(response.tripRequest.itinerary.routeList)
+        
+        print(response)
+        
+    }
+    
+    func loadData(resource: String, fileExtension: String) -> Data {
+        
+        if let path = Bundle.module.path(forResource: resource, ofType: fileExtension) {
+            
+            do {
+                
+                let content = try String(contentsOfFile: path)
+//                let sanitized = content.replacingOccurrences(of: "&", with: "&#38;")
+                
+                return content.data(using: .utf8) ?? Data()
+                
+            } catch {
+                print(error)
+            }
+            
+        }
+        
+        return Data()
+        
+    }
+    
     static var allTests = [
         ("test_execute_stop_finder_request_list", test_execute_stop_finder_request_list),
         ("test_execute_stop_finder_request_list_objectfilter", test_execute_stop_finder_request_list_objectfilter)

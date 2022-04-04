@@ -7,6 +7,24 @@
 
 import SwiftUI
 import CoreLocation
+import Combine
+
+public class TripViewModel: ObservableObject {
+    
+    private let cancellables = Set<AnyCancellable>()
+    
+    public init() {
+        
+    }
+    
+    public func terminate() {
+        
+    }
+    
+//    public
+    
+}
+
 
 struct ActiveTripView: View {
     
@@ -19,7 +37,7 @@ struct ActiveTripView: View {
     public let plannedArrival: Date = Date(timeIntervalSinceNow: 60 * 60)
     public let realtimeArrival: Date = Date(timeIntervalSinceNow: 60 * 63)
     
-    public let isBoardedTrain = true
+    public let isBoardedTrain = false
     
     public let track: String = "11"
     
@@ -63,10 +81,20 @@ struct ActiveTripView: View {
 //        )
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: {}) {
+                
+                Menu {
+                    Button(action: {}) {
+                        Text("Beenden")
+                    }
+                } label: {
                     Image(systemName: "ellipsis.circle")
+                        .foregroundColor(accent)
                 }
-                .foregroundColor(accent)
+                
+//                Button(action: {}) {
+//                    Image(systemName: "ellipsis.circle")
+//                }
+//                .foregroundColor(accent)
             }
         }
         .toolbar {
@@ -171,80 +199,6 @@ struct ActiveTripView: View {
             realtimeArrival: realtimeArrival,
             isBoardedTrain: isBoardedTrain
         )
-//        VStack {
-//
-//            ZStack(alignment: .leading) {
-//
-//                RoundedRectangle(cornerRadius: 4)
-//                    .fill(Color.black)
-//                    .frame(maxWidth: .infinity, maxHeight: 4)
-//
-//                RoundedRectangle(cornerRadius: 4)
-//                    .fill(accent)
-//                    .frame(maxWidth: 100, maxHeight: 4, alignment: .leading)
-//
-//                HStack {
-//
-//                    Circle()
-//                        .fill(Color.black)
-//                        .aspectRatio(1, contentMode: .fit)
-//                        .frame(width: 16)
-//                        .overlay(Circle().fill(accent).frame(width: 8, height: 8))
-//
-//                    Spacer()
-//
-//                    Circle()
-//                        .fill(Color.black)
-//                        .aspectRatio(1, contentMode: .fit)
-//                        .frame(width: 16)
-//                        .overlay(Circle().fill(accent).frame(width: 8, height: 8))
-//
-//                }
-//                .frame(maxWidth: .infinity)
-//
-//            }
-//
-//            HStack {
-//
-//                Text("\(plannedDeparture, style: .time)") +
-//                Text(" (+4)")
-//                    .foregroundColor(.red)
-//
-//                Spacer()
-//
-//                Text("\(plannedArrival, style: .time)")
-//
-//            }
-//            .padding(.horizontal, 8)
-//            .font(.title3.weight(.bold))
-//
-//            if !isBoardedTrain {
-//
-//                HStack {
-//
-//                    Text("\(Image(systemName: "timer")) \(PackageStrings.ActiveTrip.departingIn) \(realtimeDeparture, style: .relative)")
-//                        .foregroundColor(onAccent)
-//                        .padding(.vertical, 6)
-//                        .padding(.horizontal, 12)
-//                        .background(accent)
-//                        .cornerRadius(16)
-//
-//                    Spacer()
-//
-//                    Text(PackageStrings.ActiveTrip.arrival)
-//                        .padding(.vertical, 6)
-//                        .padding(.horizontal, 12)
-//                        .background(Color(UIColor.secondarySystemFill))
-//                        .cornerRadius(16)
-//
-//                }
-//                .font(.caption.weight(.bold))
-//
-//            } else {
-//
-//            }
-//
-//        }
         .padding()
         
     }

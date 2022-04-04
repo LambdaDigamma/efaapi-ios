@@ -18,7 +18,7 @@ public struct ODV: Codable, DynamicNodeDecoding {
     public var usage: ODVUsageType
     public var objectFilter: ObjectFilter
     public var place: ODVPlace
-    public var name: ODVName?
+    public var name: ODVName? = nil
 
     public enum CodingKeys: String, CodingKey {
         case type
@@ -26,6 +26,18 @@ public struct ODV: Codable, DynamicNodeDecoding {
         case objectFilter = "anyObjFilter"
         case place = "itdOdvPlace"
         case name = "itdOdvName"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.type = try container.decode(String.self, forKey: .type)
+        self.usage = try container.decode(ODVUsageType.self, forKey: .usage)
+        self.objectFilter = try container.decode(ObjectFilter.self, forKey: .objectFilter)
+        self.place = try container.decode(ODVPlace.self, forKey: .place)
+        self.name = try container.decode(ODVName?.self, forKey: .name)
+        
     }
 
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {

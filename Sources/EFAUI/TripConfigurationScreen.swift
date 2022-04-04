@@ -6,8 +6,31 @@
 //
 
 import SwiftUI
+import EFAAPI
 
 public struct TripConfigurationScreen: View {
+    
+    @State var showSelectOrigin = false
+    @State var showSelectDestination = false
+    @State var origin: TransitLocation?
+    @State var destination: TransitLocation?
+    
+    private let transitService: DefaultTransitService
+    
+    @StateObject var selectOriginViewModel: TransitLocationSearchViewModel
+    @StateObject var selectDestinationViewModel: TransitLocationSearchViewModel
+    
+    public init(
+        transitService: DefaultTransitService
+    ) {
+        self.transitService = transitService
+        self._selectOriginViewModel = .init(
+            wrappedValue: TransitLocationSearchViewModel(service: transitService)
+        )
+        self._selectDestinationViewModel = .init(
+            wrappedValue: TransitLocationSearchViewModel(service: transitService)
+        )
+    }
     
     public var body: some View {
         
@@ -23,8 +46,8 @@ public struct TripConfigurationScreen: View {
                 
                 HStack {
                     
-                    Button(action: {}) {
-                        Text("Abfahrt auswählen")
+                    Button(action: openSelectOrigin) {
+                        Text(origin?.name ?? "Abfahrt auswählen")
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
                             .padding()
@@ -50,8 +73,8 @@ public struct TripConfigurationScreen: View {
                 
                 HStack {
                     
-                    Button(action: {}) {
-                        Text("Ankunft auswählen")
+                    Button(action: openSelectDestination) {
+                        Text(destination?.name ?? "Ziel auswählen")
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
                             .fontWeight(.semibold)
@@ -98,6 +121,16 @@ public struct TripConfigurationScreen: View {
             
         }
         .navigationTitle(Text("Auskunft"))
+        .sheet(isPresented: $showSelectOrigin) {
+            TransitLocationSearchView(viewModel: selectOriginViewModel) { (location: TransitLocation) in
+                self.origin = location
+            }
+        }
+        .sheet(isPresented: $showSelectDestination) {
+            TransitLocationSearchView(viewModel: selectDestinationViewModel) { (location: TransitLocation) in
+                self.destination = location
+            }
+        }
         
     }
     
@@ -200,15 +233,52 @@ public struct TripConfigurationScreen: View {
         
     }
     
+    // MARK: - Actions -
+    
+    private func openSelectOrigin() {
+        
+        showSelectOrigin = true
+        
+    }
+    
+    private func openSelectDestination() {
+        
+        showSelectDestination = true
+        
+    }
+    
+    private func search() {
+        
+        guard let originID = origin?.stationID, let destinationID = destination?.stationID else {
+            return
+        }
+        
+        
+        
+//        transitService.sendTripRequest(origin: originID, destination: destinationID)
+//            .sink { (completion: Subscribers.Completion<HTTPError>) in
+//
+//            } receiveValue: { (response: TripResponse) in
+//
+//            }
+//            .store(in: &cancellables)
+
+
+        
+    }
+    
 }
 
 struct TripConfigurationScreen_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            TripConfigurationScreen()
-                .preferredColorScheme(.dark)
-        }
+            TripConfigurationScreen(
+                transitService: DefaultTransitService(
+                    loader: DefaultTransitService.defaultLoader()
+                )
+            )
+        }.preferredColorScheme(.dark)
     }
     
 }

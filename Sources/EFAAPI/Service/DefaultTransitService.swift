@@ -151,6 +151,100 @@ public class DefaultTransitService: TransitService {
         
     }
     
+    public enum TripDateTimeType: String {
+        case departure = "dep"
+        case arrival = "arr"
+    }
+    
+    public func sendTripRequest(
+        origin: Stop.ID,
+        destination: Stop.ID,
+        tripDateTimeType: TripDateTimeType = .departure
+    ) -> AnyPublisher<TripResponse, HTTPError> {
+        
+        var request = HTTPRequest(
+            method: .get,
+            path: QueryEndpoints.tripFinder.rawValue
+        )
+        
+//    https://openservice.vrr.de/vrr/XML_TRIP_REQUEST2?
+//        locationServerActive=1&
+//        sessionID=0
+//        &type_origin=any
+//        &name_origin=20036308
+//        &type_destination=any
+//        &name_destination=20016032
+//        &UTFMacro=1
+        
+        request.queryItems = [
+            URLQueryItem(name: "useRealtime", value: "1"),
+            URLQueryItem(name: "locationServerActive", value: "1"),
+            URLQueryItem(name: "name_origin", value: "\(origin)"),
+            URLQueryItem(name: "name_destination", value: "\(destination)"),
+            URLQueryItem(name: "type_origin", value: "any"),
+            URLQueryItem(name: "type_destination", value: "any"),
+            URLQueryItem(name: "itdTripDateTimeDepArr", value: tripDateTimeType.rawValue),
+            URLQueryItem(name: "mode", value: "direct"),
+            URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
+            URLQueryItem(name: "UTFMacro", value: "1")
+        ]
+        
+        return Deferred {
+            
+            return Future<TripResponse, HTTPError> { promise in
+                
+                self.loader.load(request) { (result: HTTPResult) in
+                    
+                    result.decodingXML(
+                        TripResponse.self,
+                        decoder: Self.defaultDecoder
+                    ) { (result: Result<TripResponse, HTTPError>) in
+                        
+                        switch result {
+                            case .success(let response):
+                                promise(.success(response))
+                            case .failure(let error):
+                                promise(.failure(error))
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }.eraseToAnyPublisher()
+        
+//        return Deferred {
+            
+//        https://openservice.vrr.de/vrr/XML_TRIP_REQUEST2?locationServerActive=1&sessionID=0&type_origin=any&name_origin=Duisburg Hbf &type_destination=any&name_destination=Aachen Hbf
+//
+//            return Future<DepartureMonitorResponse, HTTPError> { promise in
+//
+//                self.loader.load(request) { (result: HTTPResult) in
+//
+//                    result.decodingXML(
+//                        DepartureMonitorResponse.self,
+//                        decoder: Self.defaultDecoder
+//                    ) { (result: Result<DepartureMonitorResponse, HTTPError>) in
+//
+//                        switch result {
+//                            case .success(let response):
+//                                promise(.success(response))
+//                            case .failure(let error):
+//                                promise(.failure(error))
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }.eraseToAnyPublisher()
+        
+    }
+    
     // MARK: - Helpers
     
     public static let defaultDecoder: XMLDecoder = {
@@ -160,6 +254,7 @@ public class DefaultTransitService: TransitService {
         
         format.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         
+//        decoder.
         decoder.dateDecodingStrategy = .formatted(format)
         
         return decoder

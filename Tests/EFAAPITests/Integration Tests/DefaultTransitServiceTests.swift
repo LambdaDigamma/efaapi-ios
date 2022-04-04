@@ -17,13 +17,14 @@ final class DefaultTransitServiceTests: IntegrationTestCase {
         let service = DefaultTransitService(loader: httpLoader)
         
         service
-            .sendRawStopFinderRequest(searchText: "König")
+            .sendRawStopFinderRequest(searchText: "Aachen Hbf")
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
             } receiveValue: { (response: StopFinderResponse) in
                 
                 XCTAssertEqual(response.language.count, 2)
                 
+                print(response.stopFinderRequest)
                 expectation.fulfill()
             }
             .store(in: &cancellables)
@@ -33,7 +34,7 @@ final class DefaultTransitServiceTests: IntegrationTestCase {
         
     }
     
-    func test_execute_stop_finder_request_identified() {
+    func test_execute_trip_request_identified() {
         
         let expectation = XCTestExpectation()
         
@@ -41,7 +42,7 @@ final class DefaultTransitServiceTests: IntegrationTestCase {
         let service = DefaultTransitService(loader: httpLoader)
         
         service
-            .sendRawStopFinderRequest(searchText: "Duisburg Hbf", objectFilter: [.stops])
+            .sendTripRequest(origin: 20036308, destination: 20016032)
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
                 switch (completion) {
@@ -50,13 +51,34 @@ final class DefaultTransitServiceTests: IntegrationTestCase {
                     default: break
                 }
                 
-            } receiveValue: { (response: StopFinderResponse) in
+            } receiveValue: { (response: TripResponse) in
                 
                 XCTAssertEqual(response.language.count, 2)
                 
+                XCTAssertNotNil(response.tripRequest.itinerary.routeList)
+                
                 expectation.fulfill()
+                
             }
             .store(in: &cancellables)
+            
+//        service
+//            .sendRawStopFinderRequest(searchText: "Duisburg Hbf", objectFilter: [.stops])
+//            .sink { (completion: Subscribers.Completion<HTTPError>) in
+//
+//                switch (completion) {
+//                    case .failure(let error):
+//                        print(error)
+//                    default: break
+//                }
+//
+//            } receiveValue: { (response: StopFinderResponse) in
+//
+//                XCTAssertEqual(response.language.count, 2)
+//
+//                expectation.fulfill()
+//            }
+//            .store(in: &cancellables)
         
         wait(for: [expectation], timeout: 10)
         
@@ -65,6 +87,6 @@ final class DefaultTransitServiceTests: IntegrationTestCase {
     static var allTests = [
         ("test_has_4_query_endpoints", test_has_4_query_endpoints),
         ("test_execute_stop_finder_request_list", test_execute_stop_finder_request_list),
-        ("test_execute_stop_finder_request_identified", test_execute_stop_finder_request_identified)
+        ("test_execute_trip_request_identified", test_execute_trip_request_identified)
     ]
 }

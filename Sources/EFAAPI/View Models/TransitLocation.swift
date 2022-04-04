@@ -22,7 +22,7 @@ extension CLLocationCoordinate2D: Equatable, Hashable {
     
 }
 
-public class TransitLocation: ObservableObject, Hashable, Equatable {
+public class TransitLocation: ObservableObject, Hashable, Equatable, CustomDebugStringConvertible {
     
     public var stationID: Station.ID?
     public var locationType: TransitLocationType
@@ -71,6 +71,10 @@ public class TransitLocation: ObservableObject, Hashable, Equatable {
         hasher.combine(name)
         hasher.combine(description)
         hasher.combine(coordinates)
+    }
+    
+    public var debugDescription: String {
+        return "TransitLocation(stationID: \(String(describing: stationID)), name: \(name))"
     }
     
 }

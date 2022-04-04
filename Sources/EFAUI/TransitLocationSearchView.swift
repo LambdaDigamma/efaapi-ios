@@ -12,10 +12,17 @@ import EFAAPI
 
 public struct TransitLocationSearchView: View {
     
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: TransitLocationSearchViewModel
     
-    public init(viewModel: TransitLocationSearchViewModel) {
+    private let onSelectTransitStation: (TransitLocation) -> Void
+    
+    public init(
+        viewModel: TransitLocationSearchViewModel,
+        onSelectTransitStation: @escaping (TransitLocation) -> Void = { _ in }
+    ) {
         self.viewModel = viewModel
+        self.onSelectTransitStation = onSelectTransitStation
     }
     
     public var body: some View {
@@ -47,6 +54,10 @@ public struct TransitLocationSearchView: View {
                         TransitLocationRow(transitLocation: location)
                             .background(Color(UIColor.systemBackground))
                             .cornerRadius(16)
+                            .onTapGesture {
+                                self.onSelectTransitStation(location)
+                                self.presentationMode.wrappedValue.dismiss()
+                            }
 //                        Divider()
                     }
                     
