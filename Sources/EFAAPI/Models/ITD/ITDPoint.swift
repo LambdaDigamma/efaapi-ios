@@ -29,7 +29,7 @@ public struct ITDPoint: Codable, Equatable, Hashable, DynamicNodeDecoding {
     public let omc: Int
     public let placeID: Int
     public let locality: String
-    public let georef: String
+    public let georef: String?
     
     public let dateTime: ITDDateTime
     public let targetDateTime: ITDDateTime

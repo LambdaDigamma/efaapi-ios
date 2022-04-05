@@ -37,7 +37,7 @@ struct ActiveTripView: View {
     public let plannedArrival: Date = Date(timeIntervalSinceNow: 60 * 60)
     public let realtimeArrival: Date = Date(timeIntervalSinceNow: 60 * 63)
     
-    public let isBoardedTrain = false
+    public let isBoardedTrain = true
     
     public let track: String = "11"
     

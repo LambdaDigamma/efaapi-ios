@@ -22,4 +22,8 @@ public struct ITDTime: Codable, Equatable, Hashable, DynamicNodeDecoding {
         return .attribute
     }
     
+    public var formatted: String {
+        return "\(hour):\(minute)"
+    }
+    
 }

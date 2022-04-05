@@ -19,6 +19,7 @@ public struct ODV: Codable, DynamicNodeDecoding {
     public var objectFilter: ObjectFilter
     public var place: ODVPlace
     public var name: ODVName? = nil
+    public var assignedStops: ITDOdvAssignedStops?
 
     public enum CodingKeys: String, CodingKey {
         case type
@@ -26,6 +27,7 @@ public struct ODV: Codable, DynamicNodeDecoding {
         case objectFilter = "anyObjFilter"
         case place = "itdOdvPlace"
         case name = "itdOdvName"
+        case assignedStops = "itdOdvAssignedStops"
     }
     
     public init(from decoder: Decoder) throws {
@@ -37,6 +39,7 @@ public struct ODV: Codable, DynamicNodeDecoding {
         self.objectFilter = try container.decode(ObjectFilter.self, forKey: .objectFilter)
         self.place = try container.decode(ODVPlace.self, forKey: .place)
         self.name = try container.decode(ODVName?.self, forKey: .name)
+        self.assignedStops = try container.decode(ITDOdvAssignedStops?.self, forKey: .assignedStops)
         
     }
 

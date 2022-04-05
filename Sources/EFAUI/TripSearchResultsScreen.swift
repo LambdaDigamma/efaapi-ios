@@ -87,6 +87,77 @@ public class TripSearchResultsViewModel: ObservableObject {
     
 }
 
+public extension Collection where Element == ITDPoint {
+    
+    var usageDeparture: ITDPoint? {
+        return self.first(where: { $0.usage == .departure })
+    }
+    
+    var usageArrival: ITDPoint? {
+        return self.first(where: { $0.usage == .arrival })
+    }
+    
+}
+
+public extension Collection where Element == ODV {
+    
+    var origin: ODV? {
+        return self.first(where: { $0.usage == .origin })
+    }
+    
+    var destination: ODV? {
+        return self.first(where: { $0.usage == .destination })
+    }
+    
+}
+
+public extension ITDRoute {
+    
+    var time: String {
+        
+        guard let firstDeparture = self.partialRouteList.partialRoutes.first?.points.usageDeparture,
+              let lastArrival = self.partialRouteList.partialRoutes.last?.points.usageArrival else {
+            return ""
+        }
+        
+        return "\(firstDeparture.dateTime.time?.formatted ?? "")-\(lastArrival.dateTime.time?.formatted ?? "")"
+        
+    }
+    
+}
+
+public extension TripRequest {
+    
+    var origin: String {
+        return odv
+            .origin?
+            .assignedStops?
+            .stops
+            .first?
+            .name ?? ""
+    }
+    
+    var destination: String {
+        return odv
+            .destination?
+            .assignedStops?
+            .stops
+            .first?
+            .name ?? ""
+    }
+    
+}
+
+//public extension Collection where Element == ITDRoute {
+//
+//    var time: String {
+//
+//        self.
+//
+//    }
+//
+//}
+
 public struct TripSearchResultsScreen: View {
     
     @ObservedObject var viewModel: TripSearchResultsViewModel
@@ -115,67 +186,28 @@ public struct TripSearchResultsScreen: View {
                 
                 if let tripRequest = viewModel.request {
                     
-                    if let start = tripRequest.odv.filter({ $0.usage == .origin }).first {
-                        Text("\(start.name?.elements?.first?.name ?? "")")
+                    if let dateTime = tripRequest.tripDateTime.dateTime.parsedDate {
+                        
+                        HStack {
+                            Text("\(tripRequest.tripDateTime.depArrType.localized): ") +
+                            Text("\(dateTime, style: .date)") + Text(" ") +
+                            Text("\(dateTime, style: .time)")
+                        }
+                        
+                        
+                    }
+                    
+                    HStack {
+                        Text(tripRequest.origin) + Text(" \(Image(systemName: "arrow.right")) ") + Text(tripRequest.destination)
                     }
                     
                 }
                 
-                HStack {
-                    Text("\(viewModel.originID)")
-                    Spacer()
-                    Text("\(viewModel.destinationID)")
-                }
+                Divider()
                 
                 ForEach(viewModel.routes) { route in
                     
-                    VStack(alignment: .leading) {
-                        
-                        ForEach(route.partialRouteList.partialRoutes, id: \.self) { partialRoute in
-                            
-                            HStack {
-                                
-                                if let type = partialRoute.meansOfTransport.motType {
-                                    
-                                    HStack {
-                                        TransportIcon.icon(for: type)
-                                        Text("\(partialRoute.meansOfTransport.shortName)")
-                                    }
-                                    .foregroundColor(Color.white)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(Color(UIColor.secondarySystemFill))
-                                    .cornerRadius(8)
-                                    .font(.footnote.weight(.semibold))
-                                    
-                                }
-                                
-                                if let origin = partialRoute.points.first, let destination = partialRoute.points.last {
-                                    Text("\(origin.name)")
-                                        .font(.footnote.weight(.semibold))
-                                    + Text(" \(Image(systemName: "arrow.right")) ") + Text("\(destination.name)")
-                                        .font(.footnote.weight(.semibold))
-                                }
-                                
-//                                if let destination = partialRoute.points.last {
-//                                    Text("\(destination.name)")
-//                                        .font(.footnote.weight(.semibold))
-//                                }
-                                
-                                
-                                
-                            }
-                            
-                        }
-                        
-                        Text("\(route.publicDuration)")
-                        Text("Umst. \(route.numberOfChanges)")
-                        
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(12)
+                    row(route: route)
                     
                 }
                 
@@ -186,6 +218,68 @@ public struct TripSearchResultsScreen: View {
         .onAppear {
             viewModel.search()
         }
+        
+    }
+    
+    @ViewBuilder
+    private func row(route: ITDRoute) -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            HStack {
+                
+                Text(route.time)
+                
+                Text("\(route.publicDuration)")
+                
+                Spacer()
+                
+                Text("Umst. \(route.numberOfChanges)")
+                
+            }
+            
+            ForEach(route.partialRouteList.partialRoutes, id: \.self) { partialRoute in
+                
+                HStack {
+                    
+                    if let type = partialRoute.meansOfTransport.motType {
+                        
+                        HStack {
+                            TransportIcon.icon(for: type)
+                            Text("\(partialRoute.meansOfTransport.shortName)")
+                        }
+                        .foregroundColor(Color.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color(UIColor.secondarySystemFill))
+                        .cornerRadius(8)
+                        .font(.footnote.weight(.semibold))
+                        
+                    }
+                    
+                    if let origin = partialRoute.points.first, let destination = partialRoute.points.last {
+                        Text("\(origin.name)")
+                            .font(.footnote.weight(.semibold))
+                        + Text(" \(Image(systemName: "arrow.right")) ") + Text("\(destination.name)")
+                            .font(.footnote.weight(.semibold))
+                    }
+                    
+//                                if let destination = partialRoute.points.last {
+//                                    Text("\(destination.name)")
+//                                        .font(.footnote.weight(.semibold))
+//                                }
+                    
+                    
+                    
+                }
+                
+            }
+            
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(UIColor.secondarySystemBackground))
+        .cornerRadius(12)
         
     }
     

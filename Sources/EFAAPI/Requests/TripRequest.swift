@@ -12,7 +12,7 @@ public struct TripRequest: Codable, DynamicNodeDecoding {
     
     public let requestID: Int
     public let odv: [ODV]
-    public var dateTime: ITDDateTime
+    public var tripDateTime: ITDTripDateTime
     public let itinerary: ITDItinerary
     public let tripOptions: ITDTripOptions
     
@@ -30,7 +30,7 @@ public struct TripRequest: Codable, DynamicNodeDecoding {
     enum CodingKeys: String, CodingKey {
         case requestID = "requestID"
         case odv = "itdOdv"
-        case dateTime = "itdTripDateTime"
+        case tripDateTime = "itdTripDateTime"
         case itinerary = "itdItinerary"
         case tripOptions = "itdTripOptions"
     }

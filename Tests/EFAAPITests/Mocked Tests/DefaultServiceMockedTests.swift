@@ -122,6 +122,20 @@ final class DefaultServiceMockedTests: XCTestCase {
         
     }
     
+    func test_decode_trip_request_1() throws {
+        
+        let data = loadData(resource: "Data/TripRequest1", fileExtension: "xml")
+        let decoder = DefaultTransitService.defaultDecoder
+        
+        let response = try decoder.decode(TripResponse.self, from: data)
+        
+        XCTAssertNotNil(response.tripRequest.itinerary.routeList)
+        XCTAssertNotNil(response.tripRequest.odv.first?.assignedStops)
+        
+        print(response)
+        
+    }
+    
     func loadData(resource: String, fileExtension: String) -> Data {
         
         if let path = Bundle.module.path(forResource: resource, ofType: fileExtension) {
