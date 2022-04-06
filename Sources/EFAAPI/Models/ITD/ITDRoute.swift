@@ -59,7 +59,7 @@ public struct ITDRoute: Codable, DynamicNodeDecoding, Identifiable {
         case cTime = "cTime"
         case vehicleTime = "vehicleTime"
         case publicDuration = "publicDuration"
-        
+
         case partialRouteList = "itdPartialRouteList"
         case fare = "itdFare"
         case infoTextList = "itdInfoTextList"

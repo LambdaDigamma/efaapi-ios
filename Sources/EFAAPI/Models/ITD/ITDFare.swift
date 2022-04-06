@@ -11,7 +11,7 @@ import XMLCoder
 public struct ITDFare: Codable, DynamicNodeDecoding {
     
     public let cFEPR: Int
-    public let singleTicket: ITDSingleTicket
+    public let singleTicket: [ITDSingleTicket]
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {

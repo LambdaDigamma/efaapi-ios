@@ -18,7 +18,7 @@ public struct TransitLocationRow: View {
     
     public var body: some View {
         
-        HStack(spacing: 16) {
+        HStack(alignment: .top, spacing: 16) {
             
             ZStack {
                 
@@ -48,15 +48,19 @@ public struct TransitLocationRow: View {
             }
             .foregroundColor(.secondary)
             .frame(width: 26)
+            .padding(.top, 4)
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 2) {
                 
                 Text(transitLocation.name)
+                    .foregroundColor(.primary)
                     .font(.headline.weight(.semibold))
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text(transitLocation.description)
                     .font(.callout)
                     .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
             }
             
@@ -72,12 +76,14 @@ public struct TransitLocationRow: View {
 struct TransitLocationRow_Previews: PreviewProvider {
     static var previews: some View {
         
-        TransitLocationRow(transitLocation: TransitLocation(
-            locationType: .singlehouse,
-            name: "Musterstraße",
-            description: "Moers, 47441, Deutschland",
-            coordinates: nil
-        ))
+        Button(action: {}) {
+            TransitLocationRow(transitLocation: TransitLocation(
+                locationType: .singlehouse,
+                name: "Musterstraße",
+                description: "Moers, 47441, Deutschland",
+                coordinates: nil
+            ))
+        }
             .previewLayout(.sizeThatFits)
         
         TransitLocationRow(transitLocation: TransitLocation(

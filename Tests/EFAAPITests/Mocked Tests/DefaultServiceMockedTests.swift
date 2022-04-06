@@ -110,21 +110,76 @@ final class DefaultServiceMockedTests: XCTestCase {
     }
     
     func test_decode_route_list() throws {
-        
+
         let data = loadData(resource: "Data/RouteList", fileExtension: "xml")
         let decoder = DefaultTransitService.defaultDecoder
-        
+
         let response = try decoder.decode(TripResponse.self, from: data)
-        
+
         XCTAssertNotNil(response.tripRequest.itinerary.routeList)
-        
+
         print(response)
-        
+
     }
-    
+
     func test_decode_trip_request_1() throws {
-        
+
         let data = loadData(resource: "Data/TripRequest1", fileExtension: "xml")
+        let decoder = DefaultTransitService.defaultDecoder
+
+        let response = try decoder.decode(TripResponse.self, from: data)
+
+        XCTAssertNotNil(response.tripRequest.itinerary.routeList)
+//        XCTAssertNotNil(response.tripRequest.odv.first?.assignedStops)
+
+        print(response)
+
+    }
+
+//    func test_decode_trip_request_2() throws {
+//
+//        let data = loadData(resource: "Data/TripRequest2", fileExtension: "xml")
+//        let decoder = DefaultTransitService.defaultDecoder
+//
+//        let response = try decoder.decode(TripResponse.self, from: data)
+//
+//        XCTAssertNotNil(response.tripRequest.itinerary.routeList)
+//        XCTAssertNotNil(response.tripRequest.odv.first?.assignedStops)
+//
+//        print(response)
+//
+//    }
+    
+//    func test_decode_trip_request_3() throws {
+//
+//        let data = loadData(resource: "Data/TripRequest3", fileExtension: "xml")
+//        let decoder = DefaultTransitService.defaultDecoder
+//
+//        do {
+//
+//            let response = try decoder.decode(TripResponse.self, from: data)
+//
+//            //        XCTAssertNotNil(response.tripRequest.itinerary.routeList)
+//            //        XCTAssertNotNil(response.tripRequest.odv.first?.assignedStops)
+//
+//            print(response)
+//
+//        } catch {
+//
+//            print(error)
+//
+//            let err = error as NSError
+//            print(err.helpAnchor)
+//            print(err.localizedFailureReason)
+////            print(err.underlyingErrors)
+//
+//        }
+//
+//    }
+    
+    func test_decode_trip_request_4() throws {
+        
+        let data = loadData(resource: "Data/TripRequest4", fileExtension: "xml")
         let decoder = DefaultTransitService.defaultDecoder
         
         let response = try decoder.decode(TripResponse.self, from: data)

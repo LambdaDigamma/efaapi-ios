@@ -8,16 +8,29 @@
 import SwiftUI
 import EFAAPI
 
-struct TransportTypeSymbol: View {
+public struct TransportTypeSymbol: View {
     
-    let transportType: TransportType
+    @ScaledMetric public var size: Double = 20
     
-    var body: some View {
+    public let transportType: TransportType
+    
+    public init(
+        transportType: TransportType,
+        size: Double = 20
+    ) {
+        self._size = .init(wrappedValue: size)
+        self.transportType = transportType
+    }
+    
+    public var body: some View {
         
         let displayData = data(type: transportType)
         let transportImage = TransportIcon.icon(for: transportType)
         
         transportImage
+            .resizable()
+            .scaledToFit()
+            .frame(width: size, height: 20)
             .padding(8)
             .foregroundColor(displayData.foreground)
             .background(Circle()
@@ -26,7 +39,7 @@ struct TransportTypeSymbol: View {
         
     }
     
-    func data(type: TransportType) -> (background: Color, foreground: Color) {
+    private func data(type: TransportType) -> (background: Color, foreground: Color) {
         
         switch type {
             case .rapidBus, .cityBus, .regionalBus, .communityBus, .onCallBus:

@@ -42,8 +42,6 @@ public struct TransitLocationMapView: View {
     public var body: some View {
         Map(coordinateRegion: $mapRegion, annotationItems: locations) { location in
             
-            
-            
             MapAnnotation(coordinate: location.coordinate) {
                 Circle()
                     .stroke(.red, lineWidth: 3)

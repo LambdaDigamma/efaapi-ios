@@ -28,7 +28,7 @@ public struct ITDTripDateTime: Codable, Equatable, Hashable, DynamicNodeDecoding
         case arrival = "arr"
         
         public var localized: String {
-            switch self {
+            switch self {
                 case .arrival:
                     return "Ankunft"
                 case .departure:

@@ -12,24 +12,22 @@ public struct TripConfigurationScreen: View {
     
     @State var showSelectOrigin = false
     @State var showSelectDestination = false
-    @State var origin: TransitLocation?
-    @State var destination: TransitLocation?
+//    @State var origin: TransitLocation?
+//    @State var destination: TransitLocation?
+    
+    @ObservedObject var viewModel: TripSearchViewModel
     
     private let transitService: DefaultTransitService
-    
-    @StateObject var selectOriginViewModel: TransitLocationSearchViewModel
-    @StateObject var selectDestinationViewModel: TransitLocationSearchViewModel
+    private let onSearch: () -> ()
     
     public init(
-        transitService: DefaultTransitService
+        transitService: DefaultTransitService,
+        viewModel: TripSearchViewModel,
+        onSearch: @escaping () -> () = {}
     ) {
         self.transitService = transitService
-        self._selectOriginViewModel = .init(
-            wrappedValue: TransitLocationSearchViewModel(service: transitService)
-        )
-        self._selectDestinationViewModel = .init(
-            wrappedValue: TransitLocationSearchViewModel(service: transitService)
-        )
+        self.viewModel = viewModel
+        self.onSearch = onSearch
     }
     
     public var body: some View {
@@ -47,7 +45,7 @@ public struct TripConfigurationScreen: View {
                 HStack {
                     
                     Button(action: openSelectOrigin) {
-                        Text(origin?.name ?? "Abfahrt auswählen")
+                        Text(viewModel.origin?.name ?? "Abfahrt auswählen")
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
                             .padding()
@@ -74,7 +72,7 @@ public struct TripConfigurationScreen: View {
                 HStack {
                     
                     Button(action: openSelectDestination) {
-                        Text(destination?.name ?? "Ziel auswählen")
+                        Text(viewModel.destination?.name ?? "Ziel auswählen")
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
                             .fontWeight(.semibold)
@@ -98,7 +96,7 @@ public struct TripConfigurationScreen: View {
                     
                 }
                 
-                Button(action: {}) {
+                Button(action: search) {
                     Text("Verbindung suchen")
                         .fontWeight(.semibold)
                         .foregroundColor(.black)
@@ -122,13 +120,23 @@ public struct TripConfigurationScreen: View {
         }
         .navigationTitle(Text("Auskunft"))
         .sheet(isPresented: $showSelectOrigin) {
-            TransitLocationSearchView(viewModel: selectOriginViewModel) { (location: TransitLocation) in
-                self.origin = location
+            NavigationView {
+                TransitLocationSearchScreen(
+                    service: transitService,
+                    transitLocationSearchMode: .departure
+                ) { (location: TransitLocation) in
+                    self.viewModel.updateOrigin(location)
+                }
             }
         }
         .sheet(isPresented: $showSelectDestination) {
-            TransitLocationSearchView(viewModel: selectDestinationViewModel) { (location: TransitLocation) in
-                self.destination = location
+            NavigationView {
+                TransitLocationSearchScreen(
+                    service: transitService,
+                    transitLocationSearchMode: .arrival
+                ) { (location: TransitLocation) in
+                    self.viewModel.updateDestination(location)
+                }
             }
         }
         
@@ -249,11 +257,7 @@ public struct TripConfigurationScreen: View {
     
     private func search() {
         
-        guard let originID = origin?.stationID, let destinationID = destination?.stationID else {
-            return
-        }
-        
-        
+        viewModel.onSearchEvent?()
         
 //        transitService.sendTripRequest(origin: originID, destination: destinationID)
 //            .sink { (completion: Subscribers.Completion<HTTPError>) in
@@ -272,11 +276,15 @@ public struct TripConfigurationScreen: View {
 struct TripConfigurationScreen_Previews: PreviewProvider {
     
     static var previews: some View {
+        
+        let loader = DefaultTransitService.defaultLoader()
+        let service = DefaultTransitService(loader: loader)
+        let viewModel = TripSearchViewModel(transitService: service)
+        
         NavigationView {
             TripConfigurationScreen(
-                transitService: DefaultTransitService(
-                    loader: DefaultTransitService.defaultLoader()
-                )
+                transitService: service,
+                viewModel: viewModel
             )
         }.preferredColorScheme(.dark)
     }

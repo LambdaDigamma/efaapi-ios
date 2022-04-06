@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  Pill.swift
 //  
 //
 //  Created by Lennart Fischer on 03.04.22.

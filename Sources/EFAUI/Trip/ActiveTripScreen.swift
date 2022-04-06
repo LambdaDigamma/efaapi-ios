@@ -1,5 +1,5 @@
 //
-//  ActiveTripView.swift
+//  ActiveTripScreen.swift
 //  
 //
 //  Created by Lennart Fischer on 03.04.22.
@@ -26,7 +26,7 @@ public class TripViewModel: ObservableObject {
 }
 
 
-struct ActiveTripView: View {
+struct ActiveTripScreen: View {
     
     public let origin: String
     public let destination: String
@@ -257,10 +257,10 @@ public struct BigTrackBadge: View {
     
 }
 
-struct ActiveTripView_Previews: PreviewProvider {
+struct ActiveTripScreen_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ActiveTripView(
+            ActiveTripScreen(
                 origin: "Duisburg, Hbf",
                 destination: "Aachen, Hbf"
             )

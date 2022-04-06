@@ -12,6 +12,10 @@ public struct ITDItinerary: Codable, DynamicNodeDecoding {
     
     public let routeList: ITDRouteList?
     
+    public var safeRoutes: [ITDRoute] {
+        return routeList?.routes ?? []
+    }
+    
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
             case CodingKeys.routeList:

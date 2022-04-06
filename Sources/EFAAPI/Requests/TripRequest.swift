@@ -16,6 +16,20 @@ public struct TripRequest: Codable, DynamicNodeDecoding {
     public let itinerary: ITDItinerary
     public let tripOptions: ITDTripOptions
     
+    public init(
+        requestID: Int,
+        odv: [ODV],
+        tripDateTime: ITDTripDateTime,
+        itinerary: ITDItinerary,
+        tripOptions: ITDTripOptions
+    ) {
+        self.requestID = requestID
+        self.odv = odv
+        self.tripDateTime = tripDateTime
+        self.itinerary = itinerary
+        self.tripOptions = tripOptions
+    }
+    
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         switch key {
             case CodingKeys.requestID:
@@ -34,5 +48,19 @@ public struct TripRequest: Codable, DynamicNodeDecoding {
         case itinerary = "itdItinerary"
         case tripOptions = "itdTripOptions"
     }
+    
+//    public static let placeholder: TripRequest = {
+//        
+//        let tripRequest = TripRequest(
+//            requestID: 1,
+//            odv: [
+//                ODV
+//            ],
+//            tripDateTime: <#T##ITDTripDateTime#>,
+//            itinerary: <#T##ITDItinerary#>,
+//            tripOptions: <#T##ITDTripOptions#>
+//        )
+//        
+//    }()
     
 }
