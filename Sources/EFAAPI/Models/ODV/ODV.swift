@@ -8,6 +8,18 @@
 import Foundation
 import XMLCoder
 
+public extension Collection where Element == ODV {
+    
+    var origin: ODV? {
+        return self.first(where: { $0.usage == .origin })
+    }
+    
+    var destination: ODV? {
+        return self.first(where: { $0.usage == .destination })
+    }
+    
+}
+
 /// ODV is an abbreviation for "origin destination via" and is used to verify points using the EFAs location server.
 /// It refers to the role that the point has within a request.
 /// The determination of points (stops, addresses, points of interest, ...) using the

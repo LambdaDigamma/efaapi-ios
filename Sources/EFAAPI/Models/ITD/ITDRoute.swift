@@ -8,6 +8,37 @@
 import Foundation
 import XMLCoder
 
+public extension ITDRoute {
+    
+    var time: String {
+
+        guard let firstDeparture = self.partialRouteList.partialRoutes.first?.points.usageDeparture,
+              let lastArrival = self.partialRouteList.partialRoutes.last?.points.usageArrival else {
+            return ""
+        }
+
+        return "\(firstDeparture.dateTime.time?.formatted ?? "")-\(lastArrival.dateTime.time?.formatted ?? "")"
+
+    }
+
+    var targetStartDate: Date? {
+        return self.partialRouteList.partialRoutes.first?.points.usageDeparture?.targetDateTime.parsedDate
+    }
+
+    var targetEndDate: Date? {
+        return self.partialRouteList.partialRoutes.first?.points.usageArrival?.targetDateTime.parsedDate
+    }
+
+    var realtimeStartDate: Date? {
+        return self.partialRouteList.partialRoutes.first?.points.usageDeparture?.dateTime.parsedDate
+    }
+
+    var realtimeEndDate: Date? {
+        return self.partialRouteList.partialRoutes.first?.points.usageArrival?.dateTime.parsedDate
+    }
+    
+}
+
 public struct ITDRoute: Codable, DynamicNodeDecoding, Identifiable {
     
     public let idx: Int
@@ -26,7 +57,7 @@ public struct ITDRoute: Codable, DynamicNodeDecoding, Identifiable {
     public let infoTextList: ITDInfoTextList
     
     public var id: Int {
-        return idx
+        return routeIndex
     }
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {

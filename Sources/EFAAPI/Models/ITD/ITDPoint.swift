@@ -14,8 +14,8 @@ public struct ITDPoint: Codable, Equatable, Hashable, DynamicNodeDecoding {
     public let usage: Usage
     public let area: String
     public let platform: String
-    public let gid: String
-    public let areaGid: String
+    public let gid: String?
+    public let areaGid: String?
     public let name: String
     public let nameWO: String
     public let place: String
@@ -25,7 +25,7 @@ public struct ITDPoint: Codable, Equatable, Hashable, DynamicNodeDecoding {
     public let x: Double
     public let y: Double
     public let mapName: String
-    public let niveau: Int
+    public let niveau: Int?
     public let omc: Int
     public let placeID: Int
     public let locality: String
@@ -77,3 +77,14 @@ public struct ITDPoint: Codable, Equatable, Hashable, DynamicNodeDecoding {
     
 }
 
+public extension Collection where Element == ITDPoint {
+    
+    var usageDeparture: ITDPoint? {
+        return self.first(where: { $0.usage == .departure })
+    }
+    
+    var usageArrival: ITDPoint? {
+        return self.first(where: { $0.usage == .arrival })
+    }
+    
+}

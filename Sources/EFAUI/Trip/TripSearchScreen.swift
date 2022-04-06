@@ -26,75 +26,6 @@ public class TripRouteViewModel: ObservableObject, Identifiable {
     
 }
 
-public extension Collection where Element == ITDPoint {
-    
-    var usageDeparture: ITDPoint? {
-        return self.first(where: { $0.usage == .departure })
-    }
-    
-    var usageArrival: ITDPoint? {
-        return self.first(where: { $0.usage == .arrival })
-    }
-    
-}
-
-public extension Collection where Element == ODV {
-    
-    var origin: ODV? {
-        return self.first(where: { $0.usage == .origin })
-    }
-    
-    var destination: ODV? {
-        return self.first(where: { $0.usage == .destination })
-    }
-    
-}
-
-public extension ITDRoute {
-    
-    var time: String {
-        
-        guard let firstDeparture = self.partialRouteList.partialRoutes.first?.points.usageDeparture,
-              let lastArrival = self.partialRouteList.partialRoutes.last?.points.usageArrival else {
-            return ""
-        }
-        
-        return "\(firstDeparture.dateTime.time?.formatted ?? "")-\(lastArrival.dateTime.time?.formatted ?? "")"
-        
-    }
-    
-    var startDate: Date? {
-        return self.partialRouteList.partialRoutes.first?.points.usageDeparture?.dateTime.parsedDate
-    }
-    
-    var endDate: Date? {
-        return self.partialRouteList.partialRoutes.first?.points.usageArrival?.dateTime.parsedDate
-    }
-    
-}
-
-public extension TripRequest {
-    
-    var origin: String {
-        return odv
-            .origin?
-            .assignedStops?
-            .stops
-            .first?
-            .name ?? ""
-    }
-    
-    var destination: String {
-        return odv
-            .destination?
-            .assignedStops?
-            .stops
-            .first?
-            .name ?? ""
-    }
-    
-}
-
 public struct TripSearchScreen: View {
     
     @ObservedObject var viewModel: TripSearchViewModel
@@ -181,7 +112,7 @@ public struct TripSearchScreen: View {
             
             ScrollView {
                 
-                LazyVStack(spacing: 20) {
+                VStack(spacing: 8) {
                     
                     ForEach(request.itinerary.safeRoutes) { route in
                         
@@ -202,19 +133,7 @@ public struct TripSearchScreen: View {
     private func errorState() -> some View {
         
         viewModel.result.hasError { (error: Error) in
-            
             Text(error.localizedDescription)
-            
-//            if let error = viewModel.error {
-//                Text(error.underlyingError?.localizedDescription ?? "")
-//
-//                if let underlyingError = error.underlyingError, let decodingError = underlyingError as? DecodingError {
-//                    Text(decodingError.recoverySuggestion ?? "")
-//                    Text(decodingError.failureReason ?? "")
-//                    Text(decodingError.errorDescription ?? "")
-//                }
-//            }
-            
         }
         
     }
@@ -244,13 +163,21 @@ public struct TripRouteOverview: View {
         
         VStack(alignment: .leading) {
             
-            HStack {
+            HStack(alignment: .top) {
                 
-                if let startDate = route.startDate, let endDate = route.endDate {
+                VStack {
                     
-                    Text(Self.shortIntervalFormatter.string(from: startDate, to: endDate))
+                    if let startDate = route.targetStartDate, let endDate = route.targetEndDate {
+                        Text(Self.shortIntervalFormatter.string(from: startDate, to: endDate))
+                    }
+                    
+                    if let startDate = route.realtimeStartDate, let endDate = route.realtimeEndDate {
+                        Text(Self.shortIntervalFormatter.string(from: startDate, to: endDate))
+                            .foregroundColor(.green)
+                    }
                     
                 }
+                .font(.caption)
                 
                 Text("\(route.publicDuration)")
                 
@@ -259,8 +186,9 @@ public struct TripRouteOverview: View {
                 Text("Umst. \(route.numberOfChanges)")
                 
             }
+            .font(.caption)
             
-            VStack {
+            VStack(alignment: .leading) {
                 
                 ForEach(route.partialRouteList.partialRoutes, id: \.self) { partialRoute in
                     
@@ -279,6 +207,18 @@ public struct TripRouteOverview: View {
                             .cornerRadius(8)
                             .font(.footnote.weight(.semibold))
                             
+                        } else {
+                            
+                            HStack {
+                                TransportIcon.pedestrian()
+                            }
+                            .foregroundColor(Color.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color(UIColor.secondarySystemFill))
+                            .cornerRadius(8)
+                            .font(.footnote.weight(.semibold))
+                            
                         }
                         
                         if let origin = partialRoute.points.first, let destination = partialRoute.points.last {
@@ -288,10 +228,10 @@ public struct TripRouteOverview: View {
                                 .font(.footnote.weight(.semibold))
                         }
                         
-                        //                                if let destination = partialRoute.points.last {
-                        //                                    Text("\(destination.name)")
-                        //                                        .font(.footnote.weight(.semibold))
-                        //                                }
+//                                if let destination = partialRoute.points.last {
+//                                    Text("\(destination.name)")
+//                                        .font(.footnote.weight(.semibold))
+//                                }
                         
                         
                         
@@ -300,6 +240,7 @@ public struct TripRouteOverview: View {
                 }
                 
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             
         }
         
@@ -321,8 +262,8 @@ struct TripSearchResultsScreen_Previews: PreviewProvider {
         let service = DefaultTransitService(loader: DefaultTransitService.defaultLoader())
         let viewModel = TripSearchViewModel(
             transitService: service,
-            originID: 20036308,
-            destinationID: 20016032
+            originID: "20036308",
+            destinationID: "20016032"
         )
         
         TripSearchScreen(viewModel: viewModel)

@@ -8,6 +8,8 @@
 import Foundation
 import XMLCoder
 
+public typealias StatelessIdentifier = String
+
 public struct ODVNameElement: Codable, DynamicNodeDecoding, BaseStubbable {
     
     public var id: Int?
@@ -33,7 +35,7 @@ public struct ODVNameElement: Codable, DynamicNodeDecoding, BaseStubbable {
     public var streetName: String?
     public var nameKey: String?
     public var mainLocality: String?
-    public var stateless: String
+    public var stateless: StatelessIdentifier
     public var value: String?
     
     

@@ -162,6 +162,21 @@ public class DefaultTransitService: TransitService {
         tripDateTimeType: TripDateTimeType = .departure
     ) -> AnyPublisher<TripResponse, HTTPError> {
         
+        return sendTripRequest(
+            origin: "\(origin)",
+            destination: "\(destination)",
+            tripDateTimeType: tripDateTimeType
+        )
+        
+    }
+    
+    
+    public func sendTripRequest(
+        origin: String,
+        destination: String,
+        tripDateTimeType: TripDateTimeType = .departure
+    ) -> AnyPublisher<TripResponse, HTTPError> {
+        
         var request = HTTPRequest(
             method: .get,
             path: QueryEndpoints.tripFinder.rawValue
@@ -180,10 +195,12 @@ public class DefaultTransitService: TransitService {
             URLQueryItem(name: "useRealtime", value: "1"),
             URLQueryItem(name: "locationServerActive", value: "1"),
             URLQueryItem(name: "name_origin", value: "\(origin)"),
+//            URLQueryItem(name: "name_origin", value: "Adlerstraße Moers"),
             URLQueryItem(name: "name_destination", value: "\(destination)"),
             URLQueryItem(name: "type_origin", value: "any"),
             URLQueryItem(name: "type_destination", value: "any"),
             URLQueryItem(name: "itdTripDateTimeDepArr", value: tripDateTimeType.rawValue),
+            URLQueryItem(name: "ptOptionsActive", value: "1"),
             URLQueryItem(name: "mode", value: "direct"),
             URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
             URLQueryItem(name: "UTFMacro", value: "1")

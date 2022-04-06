@@ -30,6 +30,10 @@ public enum TransportIcon {
         
     }
     
+    public static func pedestrian() -> Image {
+        return Image(systemName: "figure.walk")
+    }
+    
 }
 
 public enum TransportIcon_Previews: PreviewProvider {

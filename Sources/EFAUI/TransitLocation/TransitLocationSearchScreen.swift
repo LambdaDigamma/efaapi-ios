@@ -79,6 +79,9 @@ public struct TransitLocationSearchScreen: View {
         .background(Color(UIColor.systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(transitLocationSearchMode.title))
+        .onAppear {
+            self.viewModel.loadRecentSearches()
+        }
         
     }
     
@@ -119,20 +122,44 @@ public struct TransitLocationSearchScreen: View {
             
             VStack {
                 
-                ForEach(viewModel.transitLocations, id: \.self) { location in
+                if viewModel.searchActive {
                     
-                    Button(action: {
-                        self.onSelectTransitStation(location)
-                        self.presentationMode.wrappedValue.dismiss()
-                    }) {
+                    ForEach(viewModel.transitLocations, id: \.self) { location in
                         
-                        TransitLocationRow(transitLocation: location)
-                            .background(Color(UIColor.secondarySystemBackground))
-                            .frame(maxWidth: .infinity)
-                            .cornerRadius(16)
+                        Button(action: {
+                            self.viewModel.addNewRecentSearch(transitLocation: location)
+                            self.onSelectTransitStation(location)
+                            self.presentationMode.wrappedValue.dismiss()
+                        }) {
+                            
+                            TransitLocationRow(transitLocation: location)
+                                .background(Color(UIColor.secondarySystemBackground))
+                                .frame(maxWidth: .infinity)
+                                .cornerRadius(16)
+                            
+                        }
+                        .buttonStyle(PlainButtonStyle())
                         
                     }
-                    .buttonStyle(PlainButtonStyle())
+                    
+                } else {
+                    
+                    ForEach(viewModel.recentSearches, id: \.self) { location in
+                        
+                        Button(action: {
+                            self.onSelectTransitStation(location)
+                            self.presentationMode.wrappedValue.dismiss()
+                        }) {
+                            
+                            TransitLocationRow(transitLocation: location)
+                                .background(Color(UIColor.secondarySystemBackground))
+                                .frame(maxWidth: .infinity)
+                                .cornerRadius(16)
+                            
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                    }
                     
                 }
                 

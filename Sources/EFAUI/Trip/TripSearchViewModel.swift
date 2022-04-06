@@ -9,11 +9,12 @@ import Foundation
 import EFAAPI
 import ModernNetworking
 import Combine
+import OSLog
 
 public class TripSearchViewModel: ObservableObject {
     
-    @Published var originID: Stop.ID?
-    @Published var destinationID: Stop.ID?
+    @Published var originID: StatelessIdentifier?
+    @Published var destinationID: StatelessIdentifier?
     
     @Published var origin: TransitLocation?
     @Published var destination: TransitLocation?
@@ -24,11 +25,12 @@ public class TripSearchViewModel: ObservableObject {
     
     private let transitService: DefaultTransitService
     private var cancellables = Set<AnyCancellable>()
+    private let logger: Logger = .init(.default)
     
     public init(
         transitService: DefaultTransitService,
-        originID: Stop.ID? = nil,
-        destinationID: Stop.ID? = nil
+        originID: StatelessIdentifier? = nil,
+        destinationID: StatelessIdentifier? = nil
     ) {
         self.transitService = transitService
         self.originID = originID
@@ -36,13 +38,19 @@ public class TripSearchViewModel: ObservableObject {
     }
     
     public func updateOrigin(_ origin: TransitLocation) {
-        self.originID = origin.stationID
+        self.originID = origin.statelessIdentifier
         self.origin = origin
+        if let originID = originID {
+            self.logger.info("User updated origin to station: \(originID)")
+        }
     }
     
     public func updateDestination(_ destination: TransitLocation) {
-        self.destinationID = destination.stationID
+        self.destinationID = destination.statelessIdentifier
         self.destination = destination
+        if let destinationID = destinationID {
+            self.logger.info("User updated destination to station: \(destinationID)")
+        }
     }
     
     public func search() {
@@ -57,7 +65,7 @@ public class TripSearchViewModel: ObservableObject {
                 switch completion {
                     case .failure(let error):
                         
-                        print(error.underlyingError)
+                        print(error.underlyingError ?? "")
                         
                         self.result = .error(error)
                     default: break

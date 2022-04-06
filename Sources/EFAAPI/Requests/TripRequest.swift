@@ -49,18 +49,26 @@ public struct TripRequest: Codable, DynamicNodeDecoding {
         case tripOptions = "itdTripOptions"
     }
     
-//    public static let placeholder: TripRequest = {
-//        
-//        let tripRequest = TripRequest(
-//            requestID: 1,
-//            odv: [
-//                ODV
-//            ],
-//            tripDateTime: <#T##ITDTripDateTime#>,
-//            itinerary: <#T##ITDItinerary#>,
-//            tripOptions: <#T##ITDTripOptions#>
-//        )
-//        
-//    }()
+}
+
+public extension TripRequest {
+    
+    var origin: String {
+        return odv
+            .origin?
+            .assignedStops?
+            .stops
+            .first?
+            .name ?? ""
+    }
+    
+    var destination: String {
+        return odv
+            .destination?
+            .assignedStops?
+            .stops
+            .first?
+            .name ?? ""
+    }
     
 }
