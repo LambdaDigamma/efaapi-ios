@@ -19,6 +19,10 @@ let package = Package(
         .library(
             name: "EFAUI",
             targets: ["EFAUI"]
+        ),
+        .executable(
+            name: "EFACLI",
+            targets: ["EFACLI"]
         )
     ],
     dependencies: [
@@ -33,6 +37,10 @@ let package = Package(
         ),
         .target(
             name: "EFAUI",
+            dependencies: ["EFAAPI"]
+        ),
+        .executableTarget(
+            name: "EFACLI",
             dependencies: ["EFAAPI"]
         ),
         .testTarget(

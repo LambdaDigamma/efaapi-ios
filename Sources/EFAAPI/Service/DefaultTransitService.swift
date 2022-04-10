@@ -151,11 +151,6 @@ public class DefaultTransitService: TransitService {
         
     }
     
-    public enum TripDateTimeType: String {
-        case departure = "dep"
-        case arrival = "arr"
-    }
-    
     public func sendTripRequest(
         origin: Stop.ID,
         destination: Stop.ID,
@@ -170,10 +165,10 @@ public class DefaultTransitService: TransitService {
         
     }
     
-    
     public func sendTripRequest(
         origin: String,
         destination: String,
+        config: TripRequest.Configuration = .init(),
         tripDateTimeType: TripDateTimeType = .departure
     ) -> AnyPublisher<TripResponse, HTTPError> {
         
@@ -182,29 +177,22 @@ public class DefaultTransitService: TransitService {
             path: QueryEndpoints.tripFinder.rawValue
         )
         
-//    https://openservice.vrr.de/vrr/XML_TRIP_REQUEST2?
-//        locationServerActive=1&
-//        sessionID=0
-//        &type_origin=any
-//        &name_origin=20036308
-//        &type_destination=any
-//        &name_destination=20016032
-//        &UTFMacro=1
-        
         request.queryItems = [
             URLQueryItem(name: "useRealtime", value: "1"),
             URLQueryItem(name: "locationServerActive", value: "1"),
             URLQueryItem(name: "name_origin", value: "\(origin)"),
-//            URLQueryItem(name: "name_origin", value: "Adlerstraße Moers"),
             URLQueryItem(name: "name_destination", value: "\(destination)"),
             URLQueryItem(name: "type_origin", value: "any"),
             URLQueryItem(name: "type_destination", value: "any"),
-            URLQueryItem(name: "itdTripDateTimeDepArr", value: tripDateTimeType.rawValue),
             URLQueryItem(name: "ptOptionsActive", value: "1"),
+            URLQueryItem(name: "calcNumberOfTrips", value: "\(config.calcNumberOfTrips)"),
+            URLQueryItem(name: "itdTripDateTimeDepArr", value: tripDateTimeType.rawValue),
             URLQueryItem(name: "mode", value: "direct"),
             URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
             URLQueryItem(name: "UTFMacro", value: "1")
         ]
+        
+        print("request url: \(request.url?.absoluteString ?? "")")
         
         return Deferred {
             

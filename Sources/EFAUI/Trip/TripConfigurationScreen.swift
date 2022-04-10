@@ -40,7 +40,9 @@ public struct TripConfigurationScreen: View {
 //                    .font(.largeTitle)
 //                    .fontWeight(.semibold)
                 
-                Text("From")
+                Text("Von")
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack {
                     
@@ -67,7 +69,10 @@ public struct TripConfigurationScreen: View {
                     
                 }
                 
-                Text("To")
+                Text("Nach")
+                    .padding(.horizontal)
+                    .padding(.top)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack {
                     
@@ -95,6 +100,7 @@ public struct TripConfigurationScreen: View {
                     .frame(maxWidth: 60)
                     
                 }
+                .padding(.bottom)
                 
                 Button(action: search) {
                     Text("Verbindung suchen")
@@ -107,7 +113,7 @@ public struct TripConfigurationScreen: View {
                 }
                 
                 Spacer()
-                    .frame(idealHeight: 200)
+                    .frame(idealHeight: 50)
                 
                 favorites()
                     .padding(.top, 60)

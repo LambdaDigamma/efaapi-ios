@@ -34,6 +34,27 @@ public enum TransportIcon {
         return Image(systemName: "figure.walk")
     }
     
+    public static func icon(for type: TransportTypeUi) -> Image {
+        
+        switch type {
+            case .rapidBus, .cityBus, .regionalBus, .communityBus, .onCallBus:
+                return Image(systemName: "bus.fill")
+            case .train, .internationalTrain, .shuttleTrain, .regionalTrain, .nationalTrain, .highSpeedTrain:
+                return Image(systemName: "tram.fill")
+            case .metro, .suburbanRailway, .tram:
+                return Image(systemName: "tram.fill")
+            case .subway:
+                return Image(systemName: "tram.tunnel.fill")
+            case .plane:
+                return Image(systemName: "airplane")
+            case .footpath:
+                return Image(systemName: "figure.walk")
+            default:
+                return Image(systemName: "square.grid.3x3.fill")
+        }
+        
+    }
+    
 }
 
 public enum TransportIcon_Previews: PreviewProvider {

@@ -13,11 +13,11 @@ import OSLog
 
 public class TripSearchViewModel: ObservableObject {
     
-    @Published var originID: StatelessIdentifier?
-    @Published var destinationID: StatelessIdentifier?
+    @Published public var originID: StatelessIdentifier?
+    @Published public var destinationID: StatelessIdentifier?
     
-    @Published var origin: TransitLocation?
-    @Published var destination: TransitLocation?
+    @Published public var origin: TransitLocation?
+    @Published public var destination: TransitLocation?
     
     @Published var result: DataState<TripRequest, Error> = .empty
     
@@ -59,6 +59,8 @@ public class TripSearchViewModel: ObservableObject {
             return
         }
         
+        self.result = .loading
+        
         transitService.sendTripRequest(origin: originID, destination: destinationID)
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
@@ -71,9 +73,17 @@ public class TripSearchViewModel: ObservableObject {
                     default: break
                 }
                 
-            } receiveValue: { (response: TripResponse) in
+            } receiveValue: { [weak self] (response: TripResponse) in
                 
-                self.result = .success(response.tripRequest)
+                if self?.origin == nil, let nameElement = response.tripRequest.odv.origin?.name?.elements?.first {
+                    self?.origin = .init(odvNameElement: nameElement)
+                }
+                
+                if self?.destination == nil, let nameElement = response.tripRequest.odv.destination?.name?.elements?.first {
+                    self?.destination = .init(odvNameElement: nameElement)
+                }
+                
+                self?.result = .success(response.tripRequest)
                 
             }
             .store(in: &cancellables)

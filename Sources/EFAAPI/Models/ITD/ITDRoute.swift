@@ -26,7 +26,7 @@ public extension ITDRoute {
     }
 
     var targetEndDate: Date? {
-        return self.partialRouteList.partialRoutes.first?.points.usageArrival?.targetDateTime.parsedDate
+        return self.partialRouteList.partialRoutes.last?.points.usageArrival?.targetDateTime.parsedDate
     }
 
     var realtimeStartDate: Date? {
@@ -34,7 +34,7 @@ public extension ITDRoute {
     }
 
     var realtimeEndDate: Date? {
-        return self.partialRouteList.partialRoutes.first?.points.usageArrival?.dateTime.parsedDate
+        return self.partialRouteList.partialRoutes.last?.points.usageArrival?.dateTime.parsedDate
     }
     
 }
@@ -51,7 +51,8 @@ public struct ITDRoute: Codable, DynamicNodeDecoding, Identifiable {
     public let cTime: Int
     public let vehicleTime: Int
     public let publicDuration: String
-
+    public let alternative: Bool
+    
     public let partialRouteList: ITDPartialRouteList
     public let fare: ITDFare
     public let infoTextList: ITDInfoTextList
@@ -71,7 +72,8 @@ public struct ITDRoute: Codable, DynamicNodeDecoding, Identifiable {
                 CodingKeys.searchMode,
                 CodingKeys.cTime,
                 CodingKeys.vehicleTime,
-                CodingKeys.publicDuration
+                CodingKeys.publicDuration,
+                CodingKeys.alternative
                 :
                 return .attribute
             default:
@@ -90,6 +92,7 @@ public struct ITDRoute: Codable, DynamicNodeDecoding, Identifiable {
         case cTime = "cTime"
         case vehicleTime = "vehicleTime"
         case publicDuration = "publicDuration"
+        case alternative = "alternative"
 
         case partialRouteList = "itdPartialRouteList"
         case fare = "itdFare"

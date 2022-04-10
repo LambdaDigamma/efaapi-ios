@@ -39,7 +39,6 @@ public class TransitLocationSearchViewModel: ObservableObject {
                 
                 self.searchStation(searchText: search)
                 
-                print(self.searchTerm)
 //                if !self.searchText.isEmpty {
 //                    self.filteredData = self.allData.
 //                    filter { $0.contains(str) }
@@ -125,6 +124,18 @@ public class TransitLocationSearchViewModel: ObservableObject {
         
         do {
             try encodedData.write(to: url)
+        } catch {
+            print(error)
+        }
+        
+    }
+    
+    public func delete() {
+        
+        guard let url = Self.buildURL() else { return }
+        
+        do {
+            try FileManager.default.removeItem(at: url)
         } catch {
             print(error)
         }

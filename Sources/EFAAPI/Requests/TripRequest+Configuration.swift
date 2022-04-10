@@ -1,0 +1,96 @@
+//
+//  TripRequestConfiguration.swift
+//  
+//
+//  Created by Lennart Fischer on 08.04.22.
+//
+
+import Foundation
+
+public enum RouteType: String, Codable {
+    
+    case leastTime = "LEASTTIME"
+    case leastInterchange = "LEASTINTERCHANGE"
+    case leastWalking = "LEASTWALKING"
+    
+}
+
+public enum ChangeSpeed: String, Codable {
+    
+    case fast = "fast"
+    case normal = "normal"
+    case slow = "slow"
+    
+}
+
+public enum LineRestriction: Int, Codable {
+    
+    /// All lines (`alle Linien`)
+    case `default` = 400
+    
+    /// All lines with out ICE (`alle Linien außer ICE`)
+    case withoutICE = 401
+    
+    /// All lines in network without surcharge (`Verbund ohne Aufschlag`)
+    case networkWithoutSurcharge = 402
+    
+    /// All lines in network and local transport (`Verbund und Nahverkehr`)
+    case networkAndLocalTransport = 403
+    
+}
+
+extension TripRequest {
+    
+    public struct Configuration: Equatable, Hashable, Codable {
+        
+        public init() {
+            
+        }
+        
+        /// Specifies the number of trips by public transport.
+        /// By default, four trips are calculated.
+        /// If there are alternative trips, the specified number can be exceeded.
+        public var calcNumberOfTrips: Int = 4
+        
+        /// By default, one of the trips is output before the selected
+        /// departure time or after the selected arrival time.
+        /// This parameter suppresses the default behavior.
+        public var calcOneDirection: Bool = true
+        
+        /// Activates the real-time monitoring feature
+        public var useRealtime: Bool = true
+        
+        /// Activates the parameters for limited mobility.
+        public var imparedOptionsActive: Bool = false
+        
+        /// If this parameter is activated, only low-floor
+        /// vehicles are taken into account.
+        public var lowPlatformVhcl: Bool = false
+        
+        /// Only journeys with transfers that do not take place
+        /// via escalators will be reported.
+        public var noElevators: Bool = false
+        
+        /// Only journeys with transfers that do not take place
+        /// via normal stairs will be reported.
+        public var noSolidStairs: Bool = false
+        
+        /// Only wheelchair-accessible vehicles are taken into account
+        /// in the information. Wheelchair-accessible vehicles have a
+        /// lift or ramp or allow level access.
+        public var wheelchair: Bool = false
+        
+        /// Maximum number of changes in a trip.
+        /// Trips with more than the specified number of transfers will
+        /// be discarded during the trip calculation.
+        /// By default, 9 transfers are defined as the maximum number.
+        /// Possible values are:
+        /// 0 (direct connection), 1, 2, 9
+        public var maxChanges: Int = 9
+        
+        /// Specifies the criteria for optimizing the trip information.
+        public var routeType: RouteType = .leastTime
+        
+    }
+    
+}

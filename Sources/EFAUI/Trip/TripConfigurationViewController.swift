@@ -38,8 +38,20 @@ public class TripConfigurationViewController: UIHostingController<TripConfigurat
         
     }
     
-    @MainActor required dynamic init?(coder aDecoder: NSCoder) {
+    @MainActor
+    required dynamic init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+        
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let activity = TransportationUserActivity.configureTransportationOverview()
+        
+        self.view.window?.windowScene?.userActivity = activity
+        
+        activity.becomeCurrent()
+        
     }
     
 }
