@@ -1,4 +1,4 @@
-// swift-tools-version:5.4
+// swift-tools-version:5.5
 
 import PackageDescription
 
@@ -27,7 +27,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/LambdaDigamma/ModernNetworking.git", from: "0.1.2"),
-        .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.13.1")
+        .package(url: "https://github.com/CoreOffice/XMLCoder.git", from: "0.14.0")
     ],
     targets: [
         .target(

@@ -19,10 +19,12 @@ public struct FootPathView: View {
         HStack(alignment: .top) {
             
             Text(time, style: .time)
+                .font(.body.weight(.semibold))
             
             VStack(alignment: .leading, spacing: 4) {
                 
                 Text(name)
+                    .fontWeight(.semibold)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack {

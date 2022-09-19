@@ -12,8 +12,6 @@ public struct TripConfigurationScreen: View {
     
     @State var showSelectOrigin = false
     @State var showSelectDestination = false
-//    @State var origin: TransitLocation?
-//    @State var destination: TransitLocation?
     
     @ObservedObject var viewModel: TripSearchViewModel
     
@@ -112,11 +110,11 @@ public struct TripConfigurationScreen: View {
                         .cornerRadius(12)
                 }
                 
-                Spacer()
-                    .frame(idealHeight: 50)
+//                Spacer()
+//                    .frame(idealHeight: 50)
                 
-                favorites()
-                    .padding(.top, 60)
+//                favorites()
+//                    .padding(.top, 60)
                 
                 disclaimer()
                 
