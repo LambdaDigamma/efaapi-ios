@@ -58,7 +58,7 @@ public struct TransitLocationSearchScreen: View {
     private let onSelectTransitStation: (TransitLocation) -> Void
     
     public init(
-        service: DefaultTransitService,
+        service: TransitService,
         transitLocationSearchMode: TransitLocationSearchMode = .general,
         onSelectTransitStation: @escaping (TransitLocation) -> Void = { _ in }
     ) {

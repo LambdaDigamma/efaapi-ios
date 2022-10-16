@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Factory
 
 internal extension String {
     
@@ -33,4 +34,20 @@ public enum PackageStrings {
         public static let lastUpdatedAt = String.localized("DepartureMonitor.lastUpdatedAt")
     }
     
+}
+
+public extension Container {
+    static let transitService = Factory {
+        
+        let service = StaticTransitService()
+        
+        service.loadStations = {
+            return [
+                .init(name: "Musterstraße", description: "Musterstadt"),
+                .init(name: "Nachtigalweg", description: "Musterstadt"),
+            ]
+        }
+        
+        return service as TransitService
+    }
 }

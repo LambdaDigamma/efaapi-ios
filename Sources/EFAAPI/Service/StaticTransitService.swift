@@ -19,7 +19,10 @@ public class StaticTransitService: TransitService {
         }
     }
     
-    public func findTransitLocation(for searchTerm: String, filtering objectFilter: ObjectFilter) -> AnyPublisher<[TransitLocation], HTTPError> {
+    public func findTransitLocation(
+        for searchTerm: String,
+        filtering objectFilter: ObjectFilter
+    ) -> AnyPublisher<[TransitLocation], HTTPError> {
     
         return Just(loadStations())
             .setFailureType(to: HTTPError.self)

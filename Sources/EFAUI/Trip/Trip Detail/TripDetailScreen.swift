@@ -85,7 +85,7 @@ public struct TripDetailScreen: View {
         VStack {
             
             Button(action: onActivateRoute) {
-                Text("Route aktivieren")
+                Text("Route aktivieren (bald)")
             }
             .buttonStyle(EfaPrimaryButtonStyle())
             

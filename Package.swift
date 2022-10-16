@@ -27,21 +27,22 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/LambdaDigamma/ModernNetworking.git", from: "0.1.2"),
-        .package(url: "https://github.com/CoreOffice/XMLCoder.git", from: "0.14.0")
+        .package(url: "https://github.com/CoreOffice/XMLCoder.git", from: "0.14.0"),
+        .package(url: "https://github.com/hmlongco/Factory", .upToNextMajor(from: "1.2.8"))
     ],
     targets: [
         .target(
             name: "EFAAPI",
-            dependencies: ["XMLCoder", "ModernNetworking"],
+            dependencies: ["XMLCoder", "ModernNetworking", "Factory"],
             resources: [.process("Resources")]
         ),
         .target(
             name: "EFAUI",
-            dependencies: ["EFAAPI"]
+            dependencies: ["EFAAPI", "Factory"]
         ),
         .executableTarget(
             name: "EFACLI",
-            dependencies: ["EFAAPI"]
+            dependencies: ["EFAAPI", "Factory"]
         ),
         .testTarget(
             name: "EFAAPITests",
