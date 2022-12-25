@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EFAAPI
 
 public struct RouteUiState: Codable, Equatable, Hashable {
     
@@ -18,71 +17,25 @@ public struct RouteUiState: Codable, Equatable, Hashable {
     
     public var partialRoutes: [PartialRouteUiState]
     
-}
-
-public struct PartialRouteUiState: Codable, Equatable, Hashable, Identifiable {
-    
-    public var id = UUID()
-    public let transportType: TransportTypeUi
-    public let from: Point
-    public let to: Point
-    public let timeInMinutes: Int
-    public let line: String
-    public let lineDestination: String
-    
-    public let footPathAfter: FootPathRouteUiState?
-    
-    /// Distance in meters
-    public let distance: Int?
-    
     public init(
-        id: UUID = UUID(),
-        transportType: TransportTypeUi,
-        from: Point,
-        to: Point,
-        timeInMinutes: Int,
-        distance: Int?,
-        line: String,
-        lineDestination: String,
-        footPathAfter: FootPathRouteUiState? = nil
+        origin: String,
+        destination: String,
+        date: Date,
+        duration: String,
+        numberOfChanges: Int,
+        partialRoutes: [PartialRouteUiState]
     ) {
-        self.id = id
-        self.transportType = transportType
-        self.from = from
-        self.to = to
-        self.timeInMinutes = timeInMinutes
-        self.distance = distance
-        self.line = line
-        self.lineDestination = lineDestination
-        self.footPathAfter = footPathAfter
-    }
-    
-    public struct Point: Codable, Equatable, Hashable {
-        public let stationName: String
-        public let targetDate: Date
-        public let realtimeDate: Date?
-        public let platform: String
-    }
-    
-    var targetDuration: DateInterval {
-        return DateInterval(start: from.targetDate, end: to.targetDate)
-    }
-    
-    var realtimeDuration: DateInterval {
-        let start = from.realtimeDate ?? from.targetDate
-        let end = to.realtimeDate ?? to.targetDate
-        return DateInterval(start: start, end: end)
+        self.origin = origin
+        self.destination = destination
+        self.date = date
+        self.duration = duration
+        self.numberOfChanges = numberOfChanges
+        self.partialRoutes = partialRoutes
     }
     
 }
 
-public struct FootPathRouteUiState: Codable, Equatable, Hashable {
-    
-    public let text: String
-    
-}
-
-protocol RouteDetailPresentable {
+public protocol RouteDetailPresentable {
     
     func transformIntoUiState(origin: String, destination: String) -> RouteUiState
     
@@ -90,7 +43,7 @@ protocol RouteDetailPresentable {
 
 extension ITDRoute: RouteDetailPresentable {
     
-    func transformIntoUiState(origin: String, destination: String) -> RouteUiState {
+    public func transformIntoUiState(origin: String, destination: String) -> RouteUiState {
         
         let partialRoutes = self.partialRouteList
             .partialRoutes

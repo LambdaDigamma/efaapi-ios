@@ -7,6 +7,7 @@
 
 import Foundation
 import XMLCoder
+import CoreLocation
 
 public struct ITDOdvAssignedStops: Codable, Equatable, Hashable, DynamicNodeDecoding {
     
@@ -33,6 +34,7 @@ public struct ITDOdvAssignedStop: Codable, Equatable, Hashable, DynamicNodeDecod
     public let place: String
     public let nameWithPlace: String
     public let distanceTime: Int
+    public let distance: Int
     public let isTransferStop: Bool
     
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
@@ -54,7 +56,12 @@ public struct ITDOdvAssignedStop: Codable, Equatable, Hashable, DynamicNodeDecod
         case place = "place"
         case nameWithPlace = "nameWithPlace"
         case distanceTime = "distanceTime"
+        case distance = "distance"
         case isTransferStop = "isTransferStop"
+    }
+    
+    public var coordinates: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: y, longitude: x)
     }
     
 }

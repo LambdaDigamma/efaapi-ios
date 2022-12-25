@@ -37,6 +37,7 @@ public enum PackageStrings {
 }
 
 public extension Container {
+    
     static let transitService = Factory {
         
         let service = StaticTransitService()
@@ -50,4 +51,13 @@ public extension Container {
         
         return service as TransitService
     }
+    
+    static let tripService = Factory {
+        
+        let service = DefaultTripService()
+        
+        return service
+        
+    }
+    
 }

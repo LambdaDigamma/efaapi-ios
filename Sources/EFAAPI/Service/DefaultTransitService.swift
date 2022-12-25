@@ -9,6 +9,7 @@ import Foundation
 import XMLCoder
 import Combine
 import ModernNetworking
+import CoreLocation
 
 public class DefaultTransitService: TransitService {
     
@@ -101,6 +102,73 @@ public class DefaultTransitService: TransitService {
         
     }
     
+    public func findTransitLocation(
+        for coordinate: CLLocationCoordinate2D,
+        filtering objectFilter: ObjectFilter,
+        maxNumberOfResults: Int = 20
+    ) -> AnyPublisher<[TransitLocation], HTTPError> {
+        
+        var request = HTTPRequest(
+            method: .get,
+            path: QueryEndpoints.stopFinder.rawValue
+        )
+        
+        request.queryItems = [
+            URLQueryItem(name: "locationServerActive", value: "1"),
+            URLQueryItem(name: "anyObjFilter_sf", value: "\(objectFilter.rawValue)"),
+            URLQueryItem(name: "name_sf", value: "\(coordinate.longitude):\(coordinate.latitude):WGS84[DD.DDDDD]"),
+            URLQueryItem(name: "type_sf", value: "coord"),
+            URLQueryItem(name: "anyMaxSizeHitList", value: "\(maxNumberOfResults)"),
+            URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
+            URLQueryItem(name: "UTFMacro", value: "1"),
+        ]
+        
+        return Deferred {
+            
+            return Future<StopFinderResponse, HTTPError> { promise in
+                
+                self.loader.load(request) { (result: HTTPResult) in
+                    
+                    result.decodingXML(
+                        StopFinderResponse.self,
+                        decoder: Self.defaultDecoder
+                    ) { (result: Result<StopFinderResponse, HTTPError>) in
+                        
+                        switch result {
+                            case .success(let response):
+                                promise(.success(response))
+                            case .failure(let error):
+                                promise(.failure(error))
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        .map({ (response: StopFinderResponse) in
+            return response.stopFinderRequest
+                .odv
+                .assignedStops?
+                .stops
+                .sorted(by: { $0.distanceTime < $1.distanceTime })
+                .map({
+                    TransitLocation(
+                        stationID: $0.stopID,
+                        statelessIdentifier: $0.value,
+                        locationType: .stop,
+                        name: $0.name,
+                        description: $0.nameWithPlace,
+                        coordinates: $0.coordinates
+                    )
+                }) ?? []
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
     // MARK: - Departure Monitor
     
     public func sendRawDepartureMonitorRequest(
@@ -109,7 +177,7 @@ public class DefaultTransitService: TransitService {
         
         var request = HTTPRequest(
             method: .get,
-            path: QueryEndpoints.depatureMonitor.rawValue
+            path: QueryEndpoints.departureMonitor.rawValue
         )
         
         request.queryItems = [
@@ -151,6 +219,34 @@ public class DefaultTransitService: TransitService {
         
     }
     
+    public func departureMonitor(id: Station.ID) -> AnyPublisher<DepartureMonitorData, Error> {
+        
+        return sendRawDepartureMonitorRequest(id: id)
+            .map { (response: DepartureMonitorResponse) in
+                
+                let departures = response.departureMonitorRequest.departures
+                    .departures
+                    .map { DepartureViewModel(departure: $0) }
+                
+                let name = response.departureMonitorRequest.odv.name?.elements?.first?.name ?? "Unbekannt"
+                
+                return DepartureMonitorData(
+                    date: response.now,
+                    name: name,
+                    departures: departures
+                )
+                
+            }
+            .mapError({ error in
+                return error as Error
+            })
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+        
+    }
+    
+    // MARK: - Trip Request -
+    
     public func sendTripRequest(
         origin: Stop.ID,
         destination: Stop.ID,
@@ -174,7 +270,7 @@ public class DefaultTransitService: TransitService {
         
         var request = HTTPRequest(
             method: .get,
-            path: QueryEndpoints.tripFinder.rawValue
+            path: QueryEndpoints.trip.rawValue
         )
         
         request.queryItems = [

@@ -20,8 +20,11 @@ public struct DepartureMonitorView: View {
     
     public var viewModel: DepartureMonitorViewModel
     
-    public init(viewModel: DepartureMonitorViewModel) {
+    private var showBackground: Bool
+    
+    public init(viewModel: DepartureMonitorViewModel, showBackground: Bool = true) {
         self.viewModel = viewModel
+        self.showBackground = showBackground
     }
     
     private var cardBackgroundColor: Color {
@@ -74,14 +77,19 @@ public struct DepartureMonitorView: View {
         .padding(.vertical, 20)
         .background(ZStack(alignment: .bottomTrailing) {
             
-            Image("station-background", bundle: .module)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: 100)
-                .unredacted()
+            if showBackground {
+                
+                Image("station-background", bundle: .module)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 100)
+                    .unredacted()
+                
+            }
             
-        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing))
-        .background(cardBackgroundColor)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing))
+        .background(showBackground ? cardBackgroundColor : .clear)
         
     }
     

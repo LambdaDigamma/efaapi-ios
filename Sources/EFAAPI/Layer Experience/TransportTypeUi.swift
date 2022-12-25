@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EFAAPI
 
 public enum TransportTypeUi: String, Codable, CaseIterable, Hashable, Equatable {
     

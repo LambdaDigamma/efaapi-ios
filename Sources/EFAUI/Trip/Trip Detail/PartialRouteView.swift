@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EFAAPI
 
 public struct PartialRouteView: View {
     

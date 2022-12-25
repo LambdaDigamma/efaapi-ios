@@ -10,7 +10,7 @@ import Foundation
 import Foundation
 import XMLCoder
 
-public struct ITDMeansOfTransport: Codable, Equatable, Hashable, DynamicNodeDecoding {
+public struct ITDMeansOfTransport: Codable, Equatable, Hashable, DynamicNodeDecoding, LineIdentifiable {
     
     public let name: String
     public let shortName: String
@@ -76,6 +76,10 @@ public struct ITDMeansOfTransport: Codable, Equatable, Hashable, DynamicNodeDeco
 
         case motDivaParams = "motDivaParams"
         case `operator` = "itdOperator"
+    }
+    
+    public var lineIdentifier: String {
+        self.stateless
     }
     
 }

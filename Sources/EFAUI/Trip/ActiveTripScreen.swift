@@ -26,7 +26,7 @@ public class TripViewModel: ObservableObject {
 }
 
 
-struct ActiveTripScreen: View {
+public struct ActiveTripScreen: View {
     
     public let origin: String
     public let destination: String
@@ -41,10 +41,10 @@ struct ActiveTripScreen: View {
     
     public let track: String = "11"
     
-    public let accent: Color = .init(hex: "E16335")
-    public let onAccent: Color = .white
+    public let accent: Color = .yellow // .init(hex: "E16335")
+    public let onAccent: Color = .black
     
-    var body: some View {
+    public var body: some View {
         
         ScrollView {
             
@@ -81,6 +81,11 @@ struct ActiveTripScreen: View {
 //        )
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                
+                Button(action: {}) {
+                    Image(systemName: "arrow.triangle.branch")
+                        .foregroundColor(accent)
+                }
                 
                 Menu {
                     Button(action: {}) {
@@ -137,53 +142,59 @@ struct ActiveTripScreen: View {
     @ViewBuilder
     private func inTrain() -> some View {
         
-        ZStack(alignment: .topTrailing) {
-            
-            HStack(alignment: .top) {
-                
-                Pill(text: Text("\(Image(systemName: "location.fill")) Moers"), background: accent)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundColor(onAccent)
-                    .offset(x: 0, y: 6)
-                
-                Spacer()
-                
-                Pill(text: Text("\(Image(systemName: "speedometer")) 134km/h"), background: accent)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundColor(onAccent)
-                    .offset(x: 0, y: 6)
-                
-//                BigTrackBadge(
-//                    track: "11",
-//                    accent: accent,
-//                    onAccent: onAccent
-//                )
-//                .shadow(color: accent.opacity(0.5), radius: 6)
-                
-            }
-            .zIndex(20)
-            .padding(.horizontal)
-            .offset(x: 0, y: -20)
-            
-            
-            VStack(spacing: 0) {
-                
-                MapSnapshotView(
-                    location: CLLocationCoordinate2D(
-                        latitude: 51,
-                        longitude: 26
-                    ),
-                    span: 0.5
-                )
-                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
-                
-                NextStops()
-                
-            }
-            .background(Color(UIColor.tertiarySystemBackground))
-            .cornerRadius(12)
-            
-        }
+        InTrainMap()
+        
+//        ZStack(alignment: .topTrailing) {
+//
+//            HStack(alignment: .top) {
+//
+//                Pill(text: Text("\(Image(systemName: "location.fill")) Moers"), background: accent)
+//                    .font(.footnote.weight(.semibold))
+//                    .foregroundColor(onAccent)
+//                    .offset(x: 0, y: 6)
+//
+//                Spacer()
+//
+//                Pill(text: Text("\(Image(systemName: "speedometer")) 134km/h"), background: accent)
+//                    .font(.footnote.weight(.semibold))
+//                    .foregroundColor(onAccent)
+//                    .offset(x: 0, y: 6)
+//
+////                BigTrackBadge(
+////                    track: "11",
+////                    accent: accent,
+////                    onAccent: onAccent
+////                )
+////                .shadow(color: accent.opacity(0.5), radius: 6)
+//
+//            }
+//            .zIndex(20)
+//            .padding(.horizontal)
+//            .offset(x: 0, y: -20)
+//
+//
+//            VStack(spacing: 0) {
+//
+//                TripPartialRouteMap(center: .constant(.init(latitude: 40.0, longitude: 50.2)))
+//                    .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
+//
+//
+////                MapSnapshotView(
+////                    location: CLLocationCoordinate2D(
+////                        latitude: 51,
+////                        longitude: 26
+////                    ),
+////                    span: 0.5
+////                )
+////                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
+//
+//                NextStops()
+//
+//            }
+//            .background(Color(UIColor.tertiarySystemBackground))
+//            .cornerRadius(12)
+//
+//        }
         
     }
     

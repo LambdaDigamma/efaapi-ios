@@ -198,7 +198,10 @@ public struct TripSearchScreen: View {
                                 route: route.transformIntoUiState(
                                     origin: viewModel.origin?.name ?? "",
                                     destination: viewModel.destination?.name ?? ""
-                                )
+                                ),
+                                onActivateRoute: {
+                                    
+                                }
                             )
                         } label: {
                             row(route: route)
