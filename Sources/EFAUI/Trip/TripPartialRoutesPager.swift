@@ -13,10 +13,12 @@ struct TripPartialRoutesPager: View {
         
         TabView {
             
-            changeTrack(
-                from: TripPartialRouteTrack(name: "1"),
-                to: TripPartialRouteTrack(name: "14A")
-            )
+            TrackChangeView(data: TrackChangeData(
+                fromTrack: TripPartialRouteTrack(name: "1"),
+                toTrack: TripPartialRouteTrack(name: "14A"),
+                currentChangeTime: .init(value: 6, unit: .minutes)
+            ))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             
             HStack {
                 Text("DEF")
@@ -25,6 +27,7 @@ struct TripPartialRoutesPager: View {
             .background(Color.blue)
             
         }
+        .background(Color(UIColor.secondarySystemBackground))
         .frame(maxWidth: .infinity, maxHeight: 220)
         .tabViewStyle(.page(indexDisplayMode: .always))
         

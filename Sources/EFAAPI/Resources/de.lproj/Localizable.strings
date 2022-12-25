@@ -9,3 +9,8 @@
 "ObjectFilter.unknown" = "Unbekannt";
 
 "DepartureMonitor.lastUpdatedAt" = "Zuletzt aktualisiert: ";
+
+"TrackChangeView.trackChangeTitle" = "Gleiswechsel";
+"TrackChangeView.trackChangeTime" = "Aktuelle Umsteigszeit: %@";
+
+"TrackChangeView.footpathChangeTitle" = "Fußweg";

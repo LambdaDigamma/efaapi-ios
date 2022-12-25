@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreLocation
 import Combine
+import Core
 
 public class TripViewModel: ObservableObject {
     
@@ -46,33 +47,39 @@ public struct ActiveTripScreen: View {
     
     public var body: some View {
         
-        ScrollView {
-            
-            LazyVStack {
-                
-                top()
-                    .padding(.bottom, 60)
-                
-                if !isBoardedTrain {
-                    trackView()
-                        .padding(.bottom, 80)
-                } else {
-                    inTrain()
-                        .padding()
-                        .padding(.bottom, 40)
-                }
-                
-                timeInformation()
-                
-                Divider()
-                    .padding()
-                
-                actions()
-                
-            }
-            .padding(.top)
-            
-        }
+        NavigationDirectionsView(data: .init(
+            source: Point(latitude: 51.45208, longitude: 6.62323),
+            destination: Point(latitude: 51.45081, longitude: 6.64163)
+        ))
+//        .frame(maxWidth: .infinity, minHeight: 500, maxHeight: 500)
+        
+//        ScrollView {
+//
+//            LazyVStack {
+//
+//                top()
+//                    .padding(.bottom, 60)
+//
+//                if !isBoardedTrain {
+//                    trackView()
+//                        .padding(.bottom, 80)
+//                } else {
+//                    inTrain()
+//                        .padding()
+//                        .padding(.bottom, 40)
+//                }
+//
+//                timeInformation()
+//
+//                Divider()
+//                    .padding()
+//
+//                actions()
+//
+//            }
+//            .padding(.top)
+//
+//        }
 //        .background(
 //            LinearGradient(colors: [
 //                Color(hex: "13151A"),
@@ -144,58 +151,6 @@ public struct ActiveTripScreen: View {
         
         InTrainMap()
         
-//        ZStack(alignment: .topTrailing) {
-//
-//            HStack(alignment: .top) {
-//
-//                Pill(text: Text("\(Image(systemName: "location.fill")) Moers"), background: accent)
-//                    .font(.footnote.weight(.semibold))
-//                    .foregroundColor(onAccent)
-//                    .offset(x: 0, y: 6)
-//
-//                Spacer()
-//
-//                Pill(text: Text("\(Image(systemName: "speedometer")) 134km/h"), background: accent)
-//                    .font(.footnote.weight(.semibold))
-//                    .foregroundColor(onAccent)
-//                    .offset(x: 0, y: 6)
-//
-////                BigTrackBadge(
-////                    track: "11",
-////                    accent: accent,
-////                    onAccent: onAccent
-////                )
-////                .shadow(color: accent.opacity(0.5), radius: 6)
-//
-//            }
-//            .zIndex(20)
-//            .padding(.horizontal)
-//            .offset(x: 0, y: -20)
-//
-//
-//            VStack(spacing: 0) {
-//
-//                TripPartialRouteMap(center: .constant(.init(latitude: 40.0, longitude: 50.2)))
-//                    .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
-//
-//
-////                MapSnapshotView(
-////                    location: CLLocationCoordinate2D(
-////                        latitude: 51,
-////                        longitude: 26
-////                    ),
-////                    span: 0.5
-////                )
-////                .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
-//
-//                NextStops()
-//
-//            }
-//            .background(Color(UIColor.tertiarySystemBackground))
-//            .cornerRadius(12)
-//
-//        }
-        
     }
     
     @ViewBuilder
@@ -223,46 +178,6 @@ public struct ActiveTripScreen: View {
                     .foregroundColor(accent)
             }
         }
-        
-    }
-    
-}
-
-public struct BigTrackBadge: View {
-    
-    public let track: String
-    public let accent: Color
-    public let onAccent: Color
-    
-    public init(
-        track: String,
-        accent: Color,
-        onAccent: Color
-    ) {
-        self.track = track
-        self.accent = accent
-        self.onAccent = onAccent
-    }
-    
-    public var body: some View {
-        
-        VStack {
-            
-            Text("Gleis".uppercased())
-                .font(.caption)
-                .fontWeight(.semibold)
-//                .tracking(1)
-            
-            Text(track)
-                .font(.largeTitle)
-                .fontWeight(.heavy)
-            
-        }
-        .foregroundColor(onAccent)
-        .padding(.horizontal, 24)
-        .padding(.vertical, 8)
-        .background(accent)
-        .cornerRadius(8)
         
     }
     

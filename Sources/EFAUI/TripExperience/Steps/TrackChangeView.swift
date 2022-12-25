@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EFAAPI
 
 public struct TripPartialRouteTrack: Equatable, Hashable {
     
@@ -34,11 +35,8 @@ public struct TrackChangeData: Equatable, Hashable {
         self.fromTrack = fromTrack
         self.toTrack = toTrack
         self.currentChangeTime = currentChangeTime
-        self.formattedTime = ""
-//        self.formattedTime = currentChangeTime.formatted()
-        //        self.currentChangeTime.
+        self.formattedTime = currentChangeTime.formatted()
     }
-    
     
 }
 
@@ -49,9 +47,13 @@ public struct TrackChangeView: View {
     public var body: some View {
         
         VStack(alignment: .leading) {
-            Text("\(Image(systemName: "shuffle")) Gleiswechsel")
-                .fontWeight(.semibold)
-                .foregroundColor(.yellow)
+            
+            Group {
+                Text("\(Image(systemName: "shuffle")) ")
+                + Text(EFAAPI.PackageStrings.TrackChangeView.trackChangeTitle)
+            }
+            .font(.body.weight(.semibold))
+            .foregroundColor(.yellow)
             
             HStack(spacing: 32) {
                 
@@ -67,13 +69,13 @@ public struct TrackChangeView: View {
             .frame(maxWidth: .infinity, alignment: .center)
             
             VStack(alignment: .center) {
-                Text("aktuelle Umsteigszeit: \(10) min")
+                Text(EFAAPI.PackageStrings.TrackChangeView.trackChangeTime(duration: data.formattedTime))
                     .foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity)
             
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
         

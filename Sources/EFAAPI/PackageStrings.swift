@@ -34,30 +34,15 @@ public enum PackageStrings {
         public static let lastUpdatedAt = String.localized("DepartureMonitor.lastUpdatedAt")
     }
     
-}
-
-public extension Container {
-    
-    static let transitService = Factory {
-        
-        let service = StaticTransitService()
-        
-        service.loadStations = {
-            return [
-                .init(name: "Musterstraße", description: "Musterstadt"),
-                .init(name: "Nachtigalweg", description: "Musterstadt"),
-            ]
+    public enum TrackChangeView {
+        public static let trackChangeTitle = String.localized("TrackChangeView.trackChangeTitle")
+        public static func trackChangeTime(duration: String) -> String {
+            return String.localizedStringWithFormat(String.localized("TrackChangeView.trackChangeTime"), duration)
         }
-        
-        return service as TransitService
     }
     
-    static let tripService = Factory {
-        
-        let service = DefaultTripService()
-        
-        return service
-        
+    public enum FootpathChangeView {
+        public static let footpathChangeTitle = String.localized("TrackChangeView.footpathChangeTitle")
     }
     
 }

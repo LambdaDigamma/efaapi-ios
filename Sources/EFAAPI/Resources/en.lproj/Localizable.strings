@@ -9,3 +9,8 @@
 "ObjectFilter.unknown" = "Unknown";
 
 "DepartureMonitor.lastUpdatedAt" = "Last updated: ";
+
+"TrackChangeView.trackChangeTitle" = "Track change";
+"TrackChangeView.trackChangeTime" = "Current changeover time: %@";
+
+"TrackChangeView.footpathChangeTitle" = "Footpath";
