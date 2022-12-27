@@ -24,7 +24,6 @@ public class TripConfigurationViewController: UIHostingController<TripConfigurat
         self.viewModel = TripSearchViewModel(transitService: transitService)
         
         super.init(rootView: TripConfigurationScreen(
-            transitService: transitService,
             viewModel: viewModel
         ))
         

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import EFAAPI
+import Factory
 
 public enum TransitLocationSearchMode: String, Hashable {
     
@@ -58,12 +59,11 @@ public struct TransitLocationSearchScreen: View {
     private let onSelectTransitStation: (TransitLocation) -> Void
     
     public init(
-        service: TransitService,
         transitLocationSearchMode: TransitLocationSearchMode = .general,
         onSelectTransitStation: @escaping (TransitLocation) -> Void = { _ in }
     ) {
         self._viewModel = .init(
-            wrappedValue: TransitLocationSearchViewModel(service: service)
+            wrappedValue: TransitLocationSearchViewModel(service: Container.transitService())
         )
         self.transitLocationSearchMode = transitLocationSearchMode
         self.onSelectTransitStation = onSelectTransitStation
@@ -192,10 +192,11 @@ struct TransitLocationSearchView_Previews: PreviewProvider {
     
     static var previews: some View {
         
+        let _ = Container.transitService.register { service }
+        
         NavigationView {
             
             TransitLocationSearchScreen(
-                service: Self.service,
                 transitLocationSearchMode: .arrival,
                 onSelectTransitStation: onSelectTransitLocation(_:)
             )

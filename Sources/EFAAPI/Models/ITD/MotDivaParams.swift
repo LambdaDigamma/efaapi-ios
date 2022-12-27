@@ -8,7 +8,7 @@
 import Foundation
 import XMLCoder
 
-public struct MotDivaParams: Codable, Equatable, Hashable, DynamicNodeDecoding {
+public struct MotDivaParams: Codable, Equatable, Hashable, DynamicNodeDecoding, LineIdentifiable {
     
     public let line: String
     public let project: String
@@ -29,6 +29,10 @@ public struct MotDivaParams: Codable, Equatable, Hashable, DynamicNodeDecoding {
         case direction
         case supplement
         case network
+    }
+    
+    public var lineIdentifier: String {
+        return "\(network):\(line):\(supplement):\(direction):\(project)"
     }
     
 }

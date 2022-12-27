@@ -88,7 +88,7 @@ extension ITDPoint {
         
         return PartialRouteUiState.Point(
             stationName: self.name,
-            targetDate: self.targetDateTime.parsedDate ?? Date(),
+            targetDate: self.targetDateTime?.parsedDate ?? Date(),
             realtimeDate: self.dateTime.parsedDate ?? nil,
             platform: self.platformName
         )

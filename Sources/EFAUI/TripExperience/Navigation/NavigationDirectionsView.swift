@@ -2,7 +2,7 @@
 //  NavigationDirectionsView.swift
 //  
 //
-//  Created by Lennart Fischer on 25.12.22.
+//  Created by Lennart Fischer on 26.12.22.
 //
 
 import UIKit
@@ -22,108 +22,74 @@ public struct NavigationDirectionsData {
     
 }
 
-//public struct NavigationDirections: View {
-//
-//    @StateObject public var viewModel: NavigationViewModel
-//
-//    public init(data: NavigationDirectionsData) {
-//        self._viewModel = StateObject(
-//            wrappedValue: NavigationViewModel(source: data.source, destination: data.destination)
-//        )
-//    }
-//
-//    public var body: some View {
-//
-//
-//
-//    }
-//
-//
-//}
-
-public struct NavigationDirectionsView: UIViewRepresentable {
+public struct NavigationStepData: Identifiable {
     
-    public typealias UIViewType = MKMapView
+    public let id: UUID = .init()
+    
+    public let instruction: String
+    
+}
+
+public struct NavigationDirectionsView: View {
     
     @StateObject public var viewModel: NavigationViewModel
     
     public init(data: NavigationDirectionsData) {
         self._viewModel = StateObject(
-            wrappedValue: NavigationViewModel(source: data.source, destination: data.destination)
+            wrappedValue: NavigationViewModel(
+                source: data.source,
+                destination: data.destination
+            )
         )
     }
     
-    public func makeUIView(
-        context: UIViewRepresentableContext<NavigationDirectionsView>
-    ) -> MKMapView {
+    public var body: some View {
         
-        let mapView = MKMapView()
-        mapView.tintColor = UIColor(Color.routeLine)
-        mapView.delegate = context.coordinator
-        
-        Task {
-            await viewModel.load()
-            self.addDirection(mapView: mapView)
-        }
-        
-        return mapView
-    }
-    
-    public func updateUIView(_ uiView: MKMapView, context: UIViewRepresentableContext<NavigationDirectionsView>) {
-        
-        uiView.showsUserLocation = true
-        uiView.setUserTrackingMode(.followWithHeading, animated: true)
-        
-    }
-    
-    public func makeCoordinator() -> NavigationDirectionsView.Coordinator {
-        Coordinator(self)
-    }
-    
-    public final class Coordinator: NSObject, MKMapViewDelegate {
-        
-        private let mapView: NavigationDirectionsView
-        
-//        public let navigationService = DefaultNavigationService()
-        
-        public init(_ mapView: NavigationDirectionsView) {
+        VStack {
             
-            self.mapView = mapView
-            
-        }
-        
-        public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-            
-            if (overlay is MKPolyline) {
-                let pr = MKPolylineRenderer(overlay: overlay)
-                pr.strokeColor = UIColor(Color.routeLine)
-                pr.lineWidth = 7
-                return pr
+            VStack {
+                
+                viewModel.directions.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                }
+                
+                viewModel.directions.hasResource { (response: MKDirections.Response) in
+                    if let first = response.routes.first {
+                        
+                        let steps = first.steps.map { (step: MKRoute.Step) in
+                            return NavigationStepData(
+                                instruction: step.instructions
+                            )
+                        }
+                        
+                        TabView {
+                            
+                            ForEach(steps) { step in
+                                VStack {
+                                    Text(step.instruction)
+                                        .fontWeight(.medium)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                            }
+                            
+                        }
+//                        .background(Color.red)
+                        .frame(maxHeight: 140, alignment: .topLeading)
+                        .tabViewStyle(.page)
+                        
+                    }
+                }
+                
             }
             
-            return MKOverlayRenderer()
-        }
-        
-    }
-    
-    // MARK: - Annotations -
-    
-    private func addDirection(mapView: MKMapView) {
-        
-        guard let directions = viewModel.directions.value else { return }
-        
-        if let firstRoute = directions.routes.first {
+            NavigationDirectionsMapView(viewModel: viewModel)
+                .overlay(alignment: .topLeading) {
+                    HeadingView()
+                        .padding()
+                }
             
-//            firstRoute.polyline.points().
-            
-            let region = MKCoordinateRegion(
-                center: firstRoute.polyline.coordinate,
-                latitudinalMeters: 150,
-                longitudinalMeters: 150
-            )
-            
-            mapView.setRegion(region, animated: true)
-            mapView.addOverlay(firstRoute.polyline)
         }
         
     }
@@ -137,6 +103,7 @@ struct NavigationDirectionsView_Previews: PreviewProvider {
             source: Point(latitude: 51.45208, longitude: 6.62323),
             destination: Point(latitude: 51.45081, longitude: 6.64163)
         ))
+        .preferredColorScheme(.dark)
     }
     
 }

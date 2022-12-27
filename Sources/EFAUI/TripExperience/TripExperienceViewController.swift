@@ -7,11 +7,16 @@
 
 import UIKit
 import SwiftUI
+import Combine
 
 public class TripExperienceViewController: UIHostingController<ActiveTripScreen> {
     
+    private var cancellables: Set<AnyCancellable> = .init()
+    
+    public var onCancel: (() -> Void)?
+    
     public init() {
-        super.init(rootView: ActiveTripScreen(origin: "Moers", destination: "Aachen"))
+        super.init(rootView: ActiveTripScreen())
     }
     
     public required init?(coder: NSCoder) {
@@ -29,6 +34,14 @@ public class TripExperienceViewController: UIHostingController<ActiveTripScreen>
         
         self.title = "Details"
         self.view.backgroundColor = .systemBackground
+        
+        NotificationCenter.default
+            .publisher(for: .deactivatedTrip)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.onCancel?()
+            }
+            .store(in: &cancellables)
         
     }
     

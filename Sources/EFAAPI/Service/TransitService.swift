@@ -22,4 +22,15 @@ public protocol TransitService: AnyObject {
         maxNumberOfResults: Int
     ) -> AnyPublisher<[TransitLocation], HTTPError>
     
+    func sendTripRequest(
+        origin: String,
+        destination: String,
+        config: TripRequest.Configuration,
+        tripDateTimeType: TripDateTimeType
+    ) -> AnyPublisher<TripResponse, HTTPError>
+    
+    func geoObject(
+        lines: [LineIdentifiable]
+    ) -> AnyPublisher<GeoITDRequest, HTTPError>
+    
 }

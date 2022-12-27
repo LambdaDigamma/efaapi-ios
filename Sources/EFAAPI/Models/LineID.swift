@@ -21,6 +21,20 @@ public struct LineID: Codable, LineIdentifiable {
     public let direction: String
     public let project: String
     
+    public init(
+        network: String,
+        divaLineNumber: String,
+        addition: String,
+        direction: String,
+        project: String
+    ) {
+        self.network = network
+        self.divaLineNumber = divaLineNumber
+        self.addition = addition
+        self.direction = direction
+        self.project = project
+    }
+    
     public init(motDivaParams: MotDivaParams) {
         self.network = motDivaParams.network
         self.divaLineNumber = motDivaParams.line

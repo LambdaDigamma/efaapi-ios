@@ -39,16 +39,4 @@ public class TripDetailViewModel: ObservableObject {
         
     }
     
-    public func activateTrip() {
-        
-        let trip = CachedEFATrip(
-            tripDate: .departure(Date()),
-            origin: .init(id: "13456", name: origin),
-            destination: .init(id: "123456", name: destination)
-        )
-        
-        tripService.activate(trip: trip)
-        
-    }
-    
 }

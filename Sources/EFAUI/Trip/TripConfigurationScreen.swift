@@ -7,6 +7,7 @@
 
 import SwiftUI
 import EFAAPI
+import Factory
 
 public struct TripConfigurationScreen: View {
     
@@ -15,15 +16,12 @@ public struct TripConfigurationScreen: View {
     
     @ObservedObject var viewModel: TripSearchViewModel
     
-    private let transitService: DefaultTransitService
     private let onSearch: () -> ()
     
     public init(
-        transitService: DefaultTransitService,
         viewModel: TripSearchViewModel,
         onSearch: @escaping () -> () = {}
     ) {
-        self.transitService = transitService
         self.viewModel = viewModel
         self.onSearch = onSearch
     }
@@ -126,7 +124,6 @@ public struct TripConfigurationScreen: View {
         .sheet(isPresented: $showSelectOrigin) {
             NavigationView {
                 TransitLocationSearchScreen(
-                    service: transitService,
                     transitLocationSearchMode: .departure
                 ) { (location: TransitLocation) in
                     self.viewModel.updateOrigin(location)
@@ -136,7 +133,6 @@ public struct TripConfigurationScreen: View {
         .sheet(isPresented: $showSelectDestination) {
             NavigationView {
                 TransitLocationSearchScreen(
-                    service: transitService,
                     transitLocationSearchMode: .arrival
                 ) { (location: TransitLocation) in
                     self.viewModel.updateDestination(location)
@@ -263,16 +259,6 @@ public struct TripConfigurationScreen: View {
         
         viewModel.onSearchEvent?()
         
-//        transitService.sendTripRequest(origin: originID, destination: destinationID)
-//            .sink { (completion: Subscribers.Completion<HTTPError>) in
-//
-//            } receiveValue: { (response: TripResponse) in
-//
-//            }
-//            .store(in: &cancellables)
-
-
-        
     }
     
 }
@@ -285,9 +271,10 @@ struct TripConfigurationScreen_Previews: PreviewProvider {
         let service = DefaultTransitService(loader: loader)
         let viewModel = TripSearchViewModel(transitService: service)
         
-        NavigationView {
+        Container.transitService.register { service }
+        
+        return NavigationView {
             TripConfigurationScreen(
-                transitService: service,
                 viewModel: viewModel
             )
         }.preferredColorScheme(.dark)

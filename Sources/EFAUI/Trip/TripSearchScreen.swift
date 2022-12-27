@@ -200,7 +200,7 @@ public struct TripSearchScreen: View {
                                     destination: viewModel.destination?.name ?? ""
                                 ),
                                 onActivateRoute: {
-                                    
+                                    viewModel.activate(route: route, for: request)
                                 }
                             )
                         } label: {

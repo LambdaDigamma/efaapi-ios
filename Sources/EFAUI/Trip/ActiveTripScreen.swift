@@ -9,93 +9,44 @@ import SwiftUI
 import CoreLocation
 import Combine
 import Core
-
-public class TripViewModel: ObservableObject {
-    
-    private let cancellables = Set<AnyCancellable>()
-    
-    public init() {
-        
-    }
-    
-    public func terminate() {
-        
-    }
-    
-//    public
-    
-}
-
+import Factory
 
 public struct ActiveTripScreen: View {
     
-    public let origin: String
-    public let destination: String
+    @State var showConfigureTrip = false
     
-    public let plannedDeparture: Date = Date(timeIntervalSinceNow: 60 * 5)
-    public let realtimeDeparture: Date = Date(timeIntervalSinceNow: 60 * 9)
-    
-    public let plannedArrival: Date = Date(timeIntervalSinceNow: 60 * 60)
-    public let realtimeArrival: Date = Date(timeIntervalSinceNow: 60 * 63)
-    
-    public let isBoardedTrain = true
-    
-    public let track: String = "11"
-    
-    public let accent: Color = .yellow // .init(hex: "E16335")
+    public let accent: Color = .yellow
     public let onAccent: Color = .black
+    
+    @StateObject var viewModel = ActiveTripViewModel()
     
     public var body: some View {
         
-        NavigationDirectionsView(data: .init(
-            source: Point(latitude: 51.45208, longitude: 6.62323),
-            destination: Point(latitude: 51.45081, longitude: 6.64163)
-        ))
-//        .frame(maxWidth: .infinity, minHeight: 500, maxHeight: 500)
-        
-//        ScrollView {
-//
-//            LazyVStack {
-//
-//                top()
-//                    .padding(.bottom, 60)
-//
-//                if !isBoardedTrain {
-//                    trackView()
-//                        .padding(.bottom, 80)
-//                } else {
-//                    inTrain()
-//                        .padding()
-//                        .padding(.bottom, 40)
-//                }
-//
-//                timeInformation()
-//
-//                Divider()
-//                    .padding()
-//
-//                actions()
-//
-//            }
-//            .padding(.top)
-//
-//        }
-//        .background(
-//            LinearGradient(colors: [
-//                Color(hex: "13151A"),
-//                Color(hex: "1C1E23")
-//            ], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
-//        )
+        ZStack {
+            
+            viewModel.trip.isLoading {
+                DefaultProgressView(text: "Loading your trip…")
+            }
+            
+            viewModel.trip.hasResource { data in
+                ActiveTripContainer(data: data)
+            }
+            
+        }
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 
-                Button(action: {}) {
+                Button(action: {
+                    showConfigureTrip = true
+                }) {
                     Image(systemName: "arrow.triangle.branch")
                         .foregroundColor(accent)
                 }
                 
                 Menu {
-                    Button(action: {}) {
+                    Button(action: {
+                        viewModel.terminate()
+                    }) {
                         Text("Beenden")
                     }
                 } label: {
@@ -103,17 +54,75 @@ public struct ActiveTripScreen: View {
                         .foregroundColor(accent)
                 }
                 
-//                Button(action: {}) {
-//                    Image(systemName: "ellipsis.circle")
-//                }
-//                .foregroundColor(accent)
             }
         }
-        .toolbar {
-            
+        .onAppear {
+            viewModel.load()
+        }
+        .sheet(isPresented: $showConfigureTrip) {
+            TripConfigurationScreen(viewModel: viewModel.search)
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(""))
+        
+    }
+    
+}
+
+public struct ActiveTripContainer: View {
+    
+    public let isBoardedTrain = true
+    
+    public let accent: Color = .yellow
+    public let onAccent: Color = .black
+    
+    private let data: ActiveTripData
+    
+    public init(data: ActiveTripData) {
+        self.data = data
+    }
+    
+    public var body: some View {
+        
+//        NavigationDirectionsView(data: .init(
+//            source: Point(latitude: 51.45208, longitude: 6.62323),
+//            destination: Point(latitude: 51.45081, longitude: 6.64163)
+//        ))
+//        .frame(maxWidth: .infinity, minHeight: 500, maxHeight: 500)
+
+        ScrollView {
+
+            LazyVStack {
+
+//                top()
+//                    .padding(.bottom, 60)
+
+                if !isBoardedTrain {
+                    trackView()
+                        .padding(.bottom, 80)
+                } else {
+                    inTrain()
+                        .padding()
+                        .padding(.bottom, 40)
+                }
+
+//                timeInformation()
+
+//                Divider()
+//                    .padding()
+//
+//                actions()
+
+            }
+            .padding(.top)
+
+        }
+        .background(
+            LinearGradient(colors: [
+                Color(hex: "13151A"),
+                Color(hex: "1C1E23")
+            ], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+        )
         
     }
     
@@ -122,8 +131,8 @@ public struct ActiveTripScreen: View {
         
         VStack(spacing: 12) {
             
-            Text("\(origin) \(Image(systemName: "arrow.right")) \(destination)")
-                .fontWeight(.semibold)
+            //            Text("\(origin) \(Image(systemName: "arrow.right")) \(destination)")
+            //                .fontWeight(.semibold)
             
             HStack(spacing: 20) {
                 
@@ -156,6 +165,11 @@ public struct ActiveTripScreen: View {
     @ViewBuilder
     private func timeInformation() -> some View {
         
+        let plannedDeparture: Date = Date(timeIntervalSinceNow: 60 * 5)
+        let realtimeDeparture: Date = Date(timeIntervalSinceNow: 60 * 9)
+        let plannedArrival: Date = Date(timeIntervalSinceNow: 60 * 60)
+        let realtimeArrival: Date = Date(timeIntervalSinceNow: 60 * 63)
+        
         TimeInformation(
             accentColor: accent,
             onAccent: onAccent,
@@ -183,12 +197,13 @@ public struct ActiveTripScreen: View {
     
 }
 
+
 struct ActiveTripScreen_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ActiveTripScreen(
-                origin: "Duisburg, Hbf",
-                destination: "Aachen, Hbf"
+//                origin: "Duisburg, Hbf",
+//                destination: "Aachen, Hbf"
             )
         }.preferredColorScheme(.dark)
     }

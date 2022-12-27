@@ -11,84 +11,6 @@ import CoreLocation
 import Core
 import Factory
 
-public class InTrainMapViewModel: ObservableObject {
-    
-    @Published public var currentSpeed: String?
-    @Published public var currentPlace: String?
-    
-    @Injected(Container.geocodingService) var geocodingService
-    
-    private let locationObject = CoreLocationObject()
-    private var cancellables = Set<AnyCancellable>()
-    
-    public init() {
-        
-    }
-    
-    public func start() {
-        
-        let location = locationObject
-            .$location
-            .share()
-        
-        location
-            .receive(on: DispatchQueue.main)
-            .sink { (location: CLLocation?) in
-                
-                if let accuracy = location?.speedAccuracy, let speed = location?.speed, speed > 0 {
-                    
-                    if #available(iOS 15.0, *) {
-                        
-                        let measurement = Measurement(value: speed, unit: UnitSpeed.metersPerSecond)
-                        self.currentSpeed = "\(measurement.converted(to: .kilometersPerHour).formatted())"
-                    }
-                    
-                }
-                
-            }
-            .store(in: &cancellables)
-        
-        locationObject.beginUpdates(.authorizedWhenInUse)
-        
-        let timerPublisher = Timer.publish(every: 30, on: .main, in: .common)
-            .autoconnect()
-            .eraseToAnyPublisher()
-            
-        let geocoded = timerPublisher
-            .setFailureType(to: Error.self)
-            .flatMap { output in
-                
-                if let location = self.locationObject.location {
-                    return self.geocodingService.placemark(from: location).eraseToAnyPublisher()
-                } else {
-                    return Fail<CLPlacemark, Error>(error: APIError.noData)
-                        .eraseToAnyPublisher()
-                }
-                
-            }
-            .eraseToAnyPublisher()
-        
-        geocoded
-            .map(\.city)
-            .eraseToAnyPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink { (completion: Subscribers.Completion<Error>) in
-                
-            } receiveValue: { (city: String) in
-                self.currentPlace = city
-            }
-            .store(in: &cancellables)
-            
-    }
-    
-    public func stop() {
-        
-        locationObject.endUpdates()
-        
-    }
-    
-}
-
 struct InTrainMap: View {
     
     public let accent: Color = .yellow // .init(hex: "E16335")
@@ -154,8 +76,10 @@ struct InTrainMap: View {
             
             VStack(spacing: 0) {
                 
-                TripPartialRouteMap(center: .constant(.init(latitude: 40.0, longitude: 50.2)))
-                    .aspectRatio(CGSize(width: 16, height: 9), contentMode: .fit)
+                TripPartialRouteMap(
+                    viewModel: viewModel
+                )
+                    .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
                 
                 
 //                MapSnapshotView(
@@ -175,7 +99,8 @@ struct InTrainMap: View {
             
         }
         .onAppear {
-            viewModel.start()
+//            viewModel.start()h
+            viewModel.load()
         }
         .onDisappear {
             viewModel.stop()

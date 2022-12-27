@@ -43,6 +43,30 @@ extension TripRequest {
     
     public struct Configuration: Equatable, Hashable, Codable {
         
+        internal init(
+            calcNumberOfTrips: Int = 4,
+            calcOneDirection: Bool = true,
+            useRealtime: Bool = true,
+            imparedOptionsActive: Bool = false,
+            lowPlatformVhcl: Bool = false,
+            noElevators: Bool = false,
+            noSolidStairs: Bool = false,
+            wheelchair: Bool = false,
+            maxChanges: Int = 9,
+            routeType: RouteType = .leastTime
+        ) {
+            self.calcNumberOfTrips = calcNumberOfTrips
+            self.calcOneDirection = calcOneDirection
+            self.useRealtime = useRealtime
+            self.imparedOptionsActive = imparedOptionsActive
+            self.lowPlatformVhcl = lowPlatformVhcl
+            self.noElevators = noElevators
+            self.noSolidStairs = noSolidStairs
+            self.wheelchair = wheelchair
+            self.maxChanges = maxChanges
+            self.routeType = routeType
+        }
+        
         public init() {
             
         }

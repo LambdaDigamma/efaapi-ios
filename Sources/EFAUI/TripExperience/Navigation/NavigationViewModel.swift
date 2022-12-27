@@ -49,11 +49,14 @@ public class NavigationViewModel: ObservableObject {
     public func load() async {
         
         do {
-            self.directions = .success(
-                try await self.calculateDirections(from: source, to: destination)
-            )
+            let response = try await self.calculateDirections(from: source, to: destination)
+            await MainActor.run {
+                self.directions = .success(response)
+            }
         } catch {
-            self.directions = .error(error)
+            await MainActor.run {
+                self.directions = .error(error)
+            }
         }
         
     }

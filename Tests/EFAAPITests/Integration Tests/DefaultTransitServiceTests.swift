@@ -6,7 +6,7 @@ import ModernNetworking
 final class DefaultTransitServiceTests: IntegrationTestCase {
     
     func test_has_4_query_endpoints() {
-        XCTAssertEqual(QueryEndpoints.allCases.count, 4)
+        XCTAssertEqual(QueryEndpoints.allCases.count, 17)
     }
     
     func test_execute_stop_finder_request_list() {

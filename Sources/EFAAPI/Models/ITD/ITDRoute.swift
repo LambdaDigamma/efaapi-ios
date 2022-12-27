@@ -22,11 +22,11 @@ public extension ITDRoute {
     }
 
     var targetStartDate: Date? {
-        return self.partialRouteList.partialRoutes.first?.points.usageDeparture?.targetDateTime.parsedDate
+        return self.partialRouteList.partialRoutes.first?.points.usageDeparture?.targetDateTime?.parsedDate
     }
 
     var targetEndDate: Date? {
-        return self.partialRouteList.partialRoutes.last?.points.usageArrival?.targetDateTime.parsedDate
+        return self.partialRouteList.partialRoutes.last?.points.usageArrival?.targetDateTime?.parsedDate
     }
 
     var realtimeStartDate: Date? {

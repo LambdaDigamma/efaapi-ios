@@ -316,33 +316,55 @@ public class DefaultTransitService: TransitService {
             
         }.eraseToAnyPublisher()
         
-//        return Deferred {
+    }
+    
+    // MARK: - Geo Object -
+    
+    public func geoObject(
+        lines: [LineIdentifiable]
+    ) -> AnyPublisher<GeoITDRequest, HTTPError> {
+        
+        var request = HTTPRequest(
+            method: .get,
+            path: QueryEndpoints.geoObject.rawValue
+        )
+        
+        let lineQueryItems = lines
+            .map { URLQueryItem(name: "line", value: $0.lineIdentifier) }
+        
+        request.queryItems = [
+            URLQueryItem(name: "UTFMacro", value: "1"),
+            URLQueryItem(name: "useRealtime", value: "1"),
+            URLQueryItem(name: "locationServerActive", value: "1"),
+            URLQueryItem(name: "ptOptionsActive", value: "1"),
+            URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue)
+        ] + lineQueryItems
+        
+        return Deferred {
             
-//        https://openservice.vrr.de/vrr/XML_TRIP_REQUEST2?locationServerActive=1&sessionID=0&type_origin=any&name_origin=Duisburg Hbf &type_destination=any&name_destination=Aachen Hbf
-//
-//            return Future<DepartureMonitorResponse, HTTPError> { promise in
-//
-//                self.loader.load(request) { (result: HTTPResult) in
-//
-//                    result.decodingXML(
-//                        DepartureMonitorResponse.self,
-//                        decoder: Self.defaultDecoder
-//                    ) { (result: Result<DepartureMonitorResponse, HTTPError>) in
-//
-//                        switch result {
-//                            case .success(let response):
-//                                promise(.success(response))
-//                            case .failure(let error):
-//                                promise(.failure(error))
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        }.eraseToAnyPublisher()
+            return Future<GeoITDRequest, HTTPError> { promise in
+                
+                self.loader.load(request) { (result: HTTPResult) in
+                    
+                    result.decodingXML(
+                        GeoITDRequest.self,
+                        decoder: Self.defaultDecoder
+                    ) { (result: Result<GeoITDRequest, HTTPError>) in
+                        
+                        switch result {
+                            case .success(let response):
+                                promise(.success(response))
+                            case .failure(let error):
+                                promise(.failure(error))
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }.eraseToAnyPublisher()
         
     }
     

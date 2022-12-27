@@ -85,7 +85,6 @@ public struct TripDetailScreen: View {
         VStack {
             
             Button(action: {
-                viewModel.activateTrip()
                 onActivateRoute()
             }) {
                 Text("Verbindung aktivieren (bald)")

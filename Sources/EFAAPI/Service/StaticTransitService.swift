@@ -87,4 +87,54 @@ public class StaticTransitService: TransitService {
         
     }
     
+    public func sendTripRequest(
+        origin: String,
+        destination: String,
+        config: TripRequest.Configuration,
+        tripDateTimeType: TripDateTimeType
+    ) -> AnyPublisher<TripResponse, HTTPError> {
+        
+        let tripRequest = TripRequest(
+            requestID: 0,
+            odv: [],
+            tripDateTime: .init(
+                depArrType: .arrival,
+                dateTime: .now(),
+                dateRange: .init(dates: [ITDDate(weekday: 0, year: 0, month: 0, day: 0)])
+            ),
+            itinerary: .init(routeList: nil),
+            tripOptions: .init(userDefined: true)
+        )
+        
+        let response = TripResponse(language: "", sessionID: "", now: Date(), tripRequest: tripRequest)
+        
+        return Just(response)
+            .setFailureType(to: HTTPError.self)
+            .eraseToAnyPublisher()
+        
+    }
+    
+    public func geoObject(lines: [LineIdentifiable]) -> AnyPublisher<GeoITDRequest, HTTPError> {
+        
+        let geoRequest = ITDGeoObjectRequest(
+            requestID: 0,
+            geoObject: ITDGeoObject(
+                geoObjectLineRequest: GeoObjectLineRequest(servingLines: .init(lines: [])),
+                geoObjectLineResponse: GeoObjectLineResponse(lineItemList: .init(lineItems: []))
+            )
+        )
+        
+        let request = GeoITDRequest(
+            language: "de",
+            sessionID: 0,
+            now: Date(),
+            geoObjectRequest: geoRequest
+        )
+        
+        return Just(request)
+            .setFailureType(to: HTTPError.self)
+            .eraseToAnyPublisher()
+        
+    }
+    
 }

@@ -43,10 +43,7 @@ public struct StopDepartureScreen: View {
             
         }
         .sheet(isPresented: $showStationSearch) {
-            TransitLocationSearchScreen(service: transitService)
-//
-//
-//            Text("Search")
+            TransitLocationSearchScreen()
         }
         
     }

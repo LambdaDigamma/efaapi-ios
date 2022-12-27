@@ -59,6 +59,7 @@ public class DefaultTripService {
     
     public func resetTrip() {
         self.currentTrip = nil
+        self.notificationCenter.post(Notification(name: .deactivatedTrip))
     }
     
     // MARK: - Storing -
