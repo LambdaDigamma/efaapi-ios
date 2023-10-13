@@ -20,7 +20,7 @@ public class TripDetailViewModel: ObservableObject {
     @Published var destination: String = ""
     @Published var startDate: Date = Date()
     
-    @Injected(Container.tripService) var tripService
+    @Injected(\.tripService) var tripService
     
     @Published var partialRoutes: [PartialRouteUiState] = []
     

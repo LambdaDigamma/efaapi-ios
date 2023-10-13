@@ -26,7 +26,7 @@ public protocol TransitService: AnyObject {
         origin: String,
         destination: String,
         config: TripRequest.Configuration,
-        tripDateTimeType: TripDateTimeType
+        tripDate: TripDate
     ) -> AnyPublisher<TripResponse, HTTPError>
     
     func geoObject(

@@ -23,7 +23,7 @@ public class DashboardDepartureViewModel: ObservableObject {
     
     private var cancellables: Set<AnyCancellable> = .init()
     
-    @Injected(Container.transitService) private var transitService
+    @Injected(\.transitService) private var transitService
     
     public func load() {
         

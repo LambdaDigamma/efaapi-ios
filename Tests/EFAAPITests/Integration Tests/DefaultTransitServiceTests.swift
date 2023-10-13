@@ -42,7 +42,7 @@ final class DefaultTransitServiceTests: IntegrationTestCase {
         let service = DefaultTransitService(loader: httpLoader)
         
         service
-            .sendTripRequest(origin: 20036308, destination: 20016032)
+            .sendTripRequest(origin: 20036308, destination: 20016032, tripDate: .departure(Date()))
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
                 switch (completion) {

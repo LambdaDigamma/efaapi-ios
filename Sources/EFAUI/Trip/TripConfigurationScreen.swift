@@ -36,9 +36,9 @@ public struct TripConfigurationScreen: View {
 //                    .font(.largeTitle)
 //                    .fontWeight(.semibold)
                 
-                Text("Von")
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+//                Text("Von")
+//                    .padding(.horizontal)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack {
                     
@@ -46,8 +46,9 @@ public struct TripConfigurationScreen: View {
                         Text(viewModel.origin?.name ?? "Abfahrt auswählen")
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
-                            .padding()
-                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color(UIColor.secondarySystemFill))
                             .cornerRadius(12)
                     }
@@ -56,7 +57,8 @@ public struct TripConfigurationScreen: View {
                         Text("\(Image(systemName: "mappin.and.ellipse"))")
                             .fontWeight(.semibold)
                             .foregroundColor(.yellow)
-                            .padding()
+                            .padding(.horizontal)
+                            .padding(.vertical, 12)
                             .frame(maxWidth: .infinity)
                             .background(Color(UIColor.secondarySystemFill))
                             .cornerRadius(12)
@@ -65,10 +67,10 @@ public struct TripConfigurationScreen: View {
                     
                 }
                 
-                Text("Nach")
-                    .padding(.horizontal)
-                    .padding(.top)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+//                Text("Nach")
+//                    .padding(.horizontal)
+//                    .padding(.top)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack {
                     
@@ -78,17 +80,19 @@ public struct TripConfigurationScreen: View {
                             .foregroundColor(.primary)
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
-                            .padding()
-                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color(UIColor.secondarySystemFill))
                             .cornerRadius(12)
                     }
                     
-                    Button(action: {}) {
+                    Button(action: { viewModel.swapOriginDestination() }) {
                         Text("\(Image(systemName: "arrow.up.arrow.down"))")
                             .fontWeight(.semibold)
                             .foregroundColor(.yellow)
-                            .padding()
+                            .padding(.horizontal)
+                            .padding(.vertical, 12)
                             .frame(maxWidth: .infinity)
                             .background(Color(UIColor.secondarySystemFill))
                             .cornerRadius(12)
@@ -111,8 +115,8 @@ public struct TripConfigurationScreen: View {
 //                Spacer()
 //                    .frame(idealHeight: 50)
                 
-//                favorites()
-//                    .padding(.top, 60)
+                favorites()
+                    .padding(.top, 60)
                 
                 disclaimer()
                 
@@ -271,7 +275,7 @@ struct TripConfigurationScreen_Previews: PreviewProvider {
         let service = DefaultTransitService(loader: loader)
         let viewModel = TripSearchViewModel(transitService: service)
         
-        Container.transitService.register { service }
+        Container.shared.transitService.register { service }
         
         return NavigationView {
             TripConfigurationScreen(

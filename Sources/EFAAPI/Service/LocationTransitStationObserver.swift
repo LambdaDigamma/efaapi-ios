@@ -13,7 +13,7 @@ import ModernNetworking
 
 public class DefaultLocationTransitStationObserver {
     
-    @Injected(Container.transitService) var transitService: TransitService
+    @Injected(\.transitService) var transitService: TransitService
     
     private let threshold: Measurement<UnitLength> = .init(value: 15, unit: .meters)
     private var cancellables: Set<AnyCancellable> = .init()

@@ -22,8 +22,8 @@ public class InTrainMapViewModel: StandardViewModel {
     @Published public var polyline: DataState<[MKPolyline], Error> = .loading
     @Published public var points: DataState<[RouteStationAnnotation], Error> = .loading
     
-    @Injected(Container.geocodingService) var geocodingService
-    @Injected(Container.transitService) var transitService
+    @Injected(\.geocodingService) var geocodingService
+    @Injected(\.transitService) var transitService
     
     private let locationObject = CoreLocationObject()
     

@@ -47,9 +47,11 @@ public class TripConfigurationViewController: UIHostingController<TripConfigurat
         
         let activity = TransportationUserActivity.configureTransportationOverview()
         
-        self.view.window?.windowScene?.userActivity = activity
-        
         activity.becomeCurrent()
+        
+//        self.view.window?.windowScene?.userActivity = activity
+//
+//        activity.becomeCurrent()
         
     }
     

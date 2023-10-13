@@ -26,7 +26,7 @@ public class TripSearchViewModel: ObservableObject {
     public var onSearchEvent: (() -> Void)?
     
     private let transitService: TransitService
-    private let tripService: DefaultTripService = Container.tripService()
+    private let tripService: DefaultTripService = Container.shared.tripService()
     private var cancellables = Set<AnyCancellable>()
     private let logger: Logger = .init(.default)
     
@@ -46,7 +46,7 @@ public class TripSearchViewModel: ObservableObject {
     ) {
         self.originID = originID
         self.destinationID = destinationID
-        self.transitService = Container.transitService()
+        self.transitService = Container.shared.transitService()
     }
     
     public func updateOrigin(_ origin: TransitLocation) {
@@ -77,7 +77,7 @@ public class TripSearchViewModel: ObservableObject {
             origin: originID,
             destination: destinationID,
             config: .init(),
-            tripDateTimeType: .departure
+            tripDate: .departure(Date().addingTimeInterval(5 * 60 * 60))
         )
             .sink { (completion: Subscribers.Completion<HTTPError>) in
                 
@@ -104,6 +104,19 @@ public class TripSearchViewModel: ObservableObject {
                 
             }
             .store(in: &cancellables)
+        
+    }
+    
+    public func swapOriginDestination() {
+        
+        let originDestinationIDs = (originID: originID, destinationID: destinationID)
+        let originDestination = (origin: origin, destination: destination)
+        
+        self.originID = originDestinationIDs.destinationID
+        self.destinationID = originDestinationIDs.originID
+        
+        self.origin = originDestination.destination
+        self.destination = originDestination.origin
         
     }
     

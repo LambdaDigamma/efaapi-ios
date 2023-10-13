@@ -63,7 +63,7 @@ public struct TransitLocationSearchScreen: View {
         onSelectTransitStation: @escaping (TransitLocation) -> Void = { _ in }
     ) {
         self._viewModel = .init(
-            wrappedValue: TransitLocationSearchViewModel(service: Container.transitService())
+            wrappedValue: TransitLocationSearchViewModel(service: Container.shared.transitService())
         )
         self.transitLocationSearchMode = transitLocationSearchMode
         self.onSelectTransitStation = onSelectTransitStation
@@ -192,7 +192,7 @@ struct TransitLocationSearchView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        let _ = Container.transitService.register { service }
+        let _ = Container.shared.transitService.register { service }
         
         NavigationView {
             

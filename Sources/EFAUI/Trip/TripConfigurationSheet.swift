@@ -13,6 +13,9 @@ public struct TripConfigurationSheet: View {
     @State var timeMode: TripDateTimeType = .departure
     @State var searchDate: Date = Date()
     
+    @State var routeType: RouteType = .leastTime
+    @State var changeSpeed: ChangeSpeed = .normal
+    
     @Environment(\.accent) var accentColor
     
     public var body: some View {
@@ -22,29 +25,63 @@ public struct TripConfigurationSheet: View {
             Form {
                 Section(header: Text("Zeitpunkt")) {
                     
-                    Picker(selection: $timeMode) {
-                        ForEach(TripDateTimeType.allCases, id: \.self) { mode in
-                            Text(mode.name)
+                    VStack {
+                        
+                        Picker(selection: $timeMode) {
+                            ForEach(TripDateTimeType.allCases, id: \.self) { mode in
+                                Text(mode.name)
+                                    .tag(mode)
+                            }
+                        } label: {
+                            Text("fjsdf")
+                        }
+                        .foregroundColor(.white)
+                        .pickerStyle(.segmented)
+                        
+                        DatePicker("Abfahrtszeit", selection: $searchDate)
+                            .labelsHidden()
+                        
+                    }
+                }
+                
+                Section(header: Text("Verkehrsmittel")) {
+                    ForEach(TransportType.allCases) { type in
+                        Text(type.localizedName)
+                    }
+                }
+                
+                Section(header: Text("Routentyp")) {
+                    Picker(selection: $routeType) {
+                        ForEach(RouteType.allCases, id: \.self) { mode in
+                            Text(mode.localizedName)
                                 .tag(mode)
+                                .frame(maxWidth: .infinity)
                         }
                     } label: {
-                        Text("fjsdf")
+                        Text("Routentyp")
                     }
                     .foregroundColor(.white)
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.menu)
+                }
+                
+                Section(header: Text("Umsteigezeit")) {
+                    Picker(selection: $changeSpeed) {
+                        ForEach(ChangeSpeed.allCases, id: \.self) { mode in
+                            Text(mode.localizedName)
+                                .tag(mode)
+                                .frame(maxWidth: .infinity)
+                        }
+                    } label: {
+                        Text("Umsteigezeit")
+                    }
+                    .foregroundColor(.white)
+                    .pickerStyle(.menu)
                     
-                    DatePicker("Abfahrtszeit", selection: $searchDate)
-                        .labelsHidden()
                 }
                 
             }
             
 //            ScrollView {
-                
-                
-                
-                
-                
                 
 //                LazyVStack {
 //

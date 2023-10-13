@@ -250,13 +250,13 @@ public class DefaultTransitService: TransitService {
     public func sendTripRequest(
         origin: Stop.ID,
         destination: Stop.ID,
-        tripDateTimeType: TripDateTimeType = .departure
+        tripDate: TripDate
     ) -> AnyPublisher<TripResponse, HTTPError> {
         
         return sendTripRequest(
             origin: "\(origin)",
             destination: "\(destination)",
-            tripDateTimeType: tripDateTimeType
+            tripDate: tripDate
         )
         
     }
@@ -265,7 +265,7 @@ public class DefaultTransitService: TransitService {
         origin: String,
         destination: String,
         config: TripRequest.Configuration = .init(),
-        tripDateTimeType: TripDateTimeType = .departure
+        tripDate: TripDate
     ) -> AnyPublisher<TripResponse, HTTPError> {
         
         var request = HTTPRequest(
@@ -273,22 +273,29 @@ public class DefaultTransitService: TransitService {
             path: QueryEndpoints.trip.rawValue
         )
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "de_de")
+        dateFormatter.dateFormat = "ddMMyyyy"
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HHmm"
+        
         request.queryItems = [
+            URLQueryItem(name: "UTFMacro", value: "1"),
             URLQueryItem(name: "useRealtime", value: "1"),
             URLQueryItem(name: "locationServerActive", value: "1"),
+            URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
             URLQueryItem(name: "name_origin", value: "\(origin)"),
             URLQueryItem(name: "name_destination", value: "\(destination)"),
             URLQueryItem(name: "type_origin", value: "any"),
             URLQueryItem(name: "type_destination", value: "any"),
             URLQueryItem(name: "ptOptionsActive", value: "1"),
             URLQueryItem(name: "calcNumberOfTrips", value: "\(config.calcNumberOfTrips)"),
-            URLQueryItem(name: "itdTripDateTimeDepArr", value: tripDateTimeType.rawValue),
+            URLQueryItem(name: "itdDateDayMonthYear", value: dateFormatter.string(from: tripDate.date)),
+            URLQueryItem(name: "itdTime", value: timeFormatter.string(from: tripDate.date)),
+            URLQueryItem(name: "itdTripDateTimeDepArr", value: tripDate.toRaw().rawValue),
             URLQueryItem(name: "mode", value: "direct"),
-            URLQueryItem(name: "coordOutputFormat", value: CoordinateOutputFormat.wgs84.rawValue),
-            URLQueryItem(name: "UTFMacro", value: "1")
         ]
-        
-        print("request url: \(request.url?.absoluteString ?? "")")
         
         return Deferred {
             

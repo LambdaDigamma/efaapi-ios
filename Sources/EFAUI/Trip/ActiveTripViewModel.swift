@@ -17,12 +17,14 @@ public struct ActiveTripData {
     
     public let response: CachedEfaTripResponse
     
+    public let raw: TripRequest
+    
 }
 
 public class ActiveTripViewModel: StandardViewModel {
     
-    @LazyInjected(Container.tripService) var tripService
-    @LazyInjected(Container.transitService) var transitService
+    @LazyInjected(\.tripService) var tripService
+    @LazyInjected(\.transitService) var transitService
     
     public var search = TripSearchViewModel()
     
@@ -67,8 +69,6 @@ public class ActiveTripViewModel: StandardViewModel {
             coordinates: request.destination.coordinates?.toCoordinate()
         )
         
-        self.trip = .success(.init(response: trip.response))
-        
         self.reloadTrip(trip: trip)
         
     }
@@ -85,7 +85,7 @@ public class ActiveTripViewModel: StandardViewModel {
             origin: trip.request.origin.id,
             destination: trip.request.destination.id,
             config: .init(),
-            tripDateTimeType: dateTimeType
+            tripDate: trip.request.tripDate.toExperience()
         )
         .sink { (error: Subscribers.Completion<HTTPError>) in
             
@@ -97,6 +97,11 @@ public class ActiveTripViewModel: StandardViewModel {
             }
             
         } receiveValue: { (response: TripResponse) in
+            
+            self.trip = .success(.init(
+                response: trip.response,
+                raw: response.tripRequest
+            ))
             
 //            response.tripRequest.itinerary.routeList
             

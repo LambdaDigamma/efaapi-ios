@@ -7,19 +7,49 @@
 
 import Foundation
 
-public enum RouteType: String, Codable {
+public enum RouteType: String, Codable, CaseIterable, Identifiable {
     
     case leastTime = "LEASTTIME"
     case leastInterchange = "LEASTINTERCHANGE"
     case leastWalking = "LEASTWALKING"
     
+    public var id: String {
+        self.rawValue
+    }
+    
+    public var localizedName: String {
+        switch self {
+            case .leastTime:
+                return "schnellste Verbindung"
+            case .leastInterchange:
+                return "wenigste Umstiege"
+            case .leastWalking:
+                return "kürzeste Fußwege"
+        }
+    }
+    
 }
 
-public enum ChangeSpeed: String, Codable {
+public enum ChangeSpeed: String, Codable, CaseIterable, Identifiable {
     
     case fast = "fast"
     case normal = "normal"
     case slow = "slow"
+    
+    public var id: String {
+        self.rawValue
+    }
+    
+    public var localizedName: String {
+        switch self {
+            case .fast:
+                return "Schnell"
+            case .normal:
+                return "Normal"
+            case .slow:
+                return "Langsam"
+        }
+    }
     
 }
 

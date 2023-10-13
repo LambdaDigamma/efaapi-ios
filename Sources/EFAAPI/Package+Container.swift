@@ -10,26 +10,30 @@ import Factory
 
 public extension Container {
     
-    static let transitService = Factory {
-        
-        let service = StaticTransitService()
-        
-        service.loadStations = {
-            return [
-                .init(name: "Musterstraße", description: "Musterstadt"),
-                .init(name: "Nachtigalweg", description: "Musterstadt"),
-            ]
+    var transitService: Factory<TransitService> {
+        self {
+            let service = StaticTransitService()
+            
+            service.loadStations = {
+                return [
+                    .init(name: "Musterstraße", description: "Musterstadt"),
+                    .init(name: "Nachtigalweg", description: "Musterstadt"),
+                ]
+            }
+            
+            return service as TransitService
         }
-        
-        return service as TransitService
+            .singleton
     }
     
-    static let tripService = Factory {
-        
-        let service = DefaultTripService()
-        
-        return service
-        
+    
+    var tripService: Factory<DefaultTripService> {
+        self {
+            let service = DefaultTripService()
+            
+            return service
+        }
+        .singleton
     }
     
 }

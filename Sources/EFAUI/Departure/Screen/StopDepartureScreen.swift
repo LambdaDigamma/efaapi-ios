@@ -14,7 +14,7 @@ public struct StopDepartureScreen: View {
     @StateObject var viewModel = StopDepartureViewModel()
     @State var showStationSearch: Bool = false
     
-    @Injected(Container.transitService) private var transitService
+    @Injected(\.transitService) private var transitService
     
     public init() {
         

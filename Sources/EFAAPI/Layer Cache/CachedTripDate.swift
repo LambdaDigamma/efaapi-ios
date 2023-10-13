@@ -12,4 +12,13 @@ public enum CachedTripDate: Codable {
     case departure(Date)
     case arrival(Date)
     
+    public func toExperience() -> TripDate {
+        switch self {
+            case .departure(let date):
+                return .departure(date)
+            case .arrival(let date):
+                return .arrival(date)
+        }
+    }
+    
 }

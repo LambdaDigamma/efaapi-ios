@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum TransportType: Int, Codable, CaseIterable, Equatable, Hashable {
+public enum TransportType: Int, Codable, CaseIterable, Equatable, Hashable, Identifiable {
     
     /**
      This is the german 'Zug'.
@@ -163,6 +163,10 @@ public enum TransportType: Int, Codable, CaseIterable, Equatable, Hashable {
             case .communityBus:
                 return "Bürgerbus"
         }
+    }
+    
+    public var id: Int {
+        return self.rawValue
     }
     
 }

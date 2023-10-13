@@ -91,7 +91,7 @@ public class StaticTransitService: TransitService {
         origin: String,
         destination: String,
         config: TripRequest.Configuration,
-        tripDateTimeType: TripDateTimeType
+        tripDate: TripDate
     ) -> AnyPublisher<TripResponse, HTTPError> {
         
         let tripRequest = TripRequest(
