@@ -26,15 +26,20 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/LambdaDigamma/ModernNetworking.git", from: "0.1.2"),
-        .package(url: "https://github.com/CoreOffice/XMLCoder.git", from: "0.14.0"),
+        .package(url: "https://github.com/LambdaDigamma/ModernNetworking", from: "1.0.0"),
+        .package(url: "https://github.com/CoreOffice/XMLCoder", from: "0.14.0"),
         .package(url: "https://github.com/hmlongco/Factory", .upToNextMajor(from: "2.0.0")),
         .package(path: "../Core")
     ],
     targets: [
         .target(
             name: "EFAAPI",
-            dependencies: ["XMLCoder", "ModernNetworking", "Factory", "Core"],
+            dependencies: [
+                "XMLCoder",
+                "ModernNetworking",
+                "Factory",
+                "Core"
+            ],
             resources: [.process("Resources")]
         ),
         .target(

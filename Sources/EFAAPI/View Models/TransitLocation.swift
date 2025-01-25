@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 
-extension CLLocationCoordinate2D: Equatable, Hashable, Codable {
+extension CLLocationCoordinate2D: @retroactive Equatable, @retroactive Hashable, Codable {
     
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
         return lhs.longitude == rhs.longitude
